@@ -1,8 +1,12 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- index.php                                     (c) Wolfram Plettscher 09/2014 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
+<?php
+// **********************************************************************************
+// **                                                                              **
+// ** index.php                                     (c) Wolfram Plettscher 10/2014 **
+// **                                                                              **
+// **********************************************************************************
+
+include ('auth.php');
+?>
 
 <?php
 	if (isset ($_GET["section"]))
@@ -79,7 +83,7 @@ p {
 
             <div id="header">
             	<table width="980px"><tr>
-					<td align="left" valign="top"><img src="pics/bf_small.jpg" alt="Bluefish Logo" width="100px"/></td>
+					<td align="left" valign="bottom"><h3>Wolfram Plettscher's Project Tools</h3></td>
 					<td align="right" valign="middle"></td>
 				</tr></table>
             </div>
