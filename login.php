@@ -6,6 +6,9 @@
 // **********************************************************************************
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//	ini_set ('session.cookie_lifetime', 99);
+//	ini_set ('session.gc_maxlifetime', 99);
+//	session_set_cookie_params (60,"/");
 	session_start();
 
     $username = $_POST['username'];
@@ -17,15 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Benutzername und Passwort werden überprüft
     if ($username == 'benjamin' && $passwort == 'geheim') {
     	$_SESSION['angemeldet'] = true;
+		$_SESSION['TIME'] = time();
 
         // Weiterleitung zur geschützten Startseite
-//        if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
-//        	if (php_sapi_name() == 'cgi') {
-//         		header('Status: 303 See Other');
-//         	} else {
-//         		header('HTTP/1.1 303 See Other');
-//         	}
-//        }
+        if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+        	if (php_sapi_name() == 'cgi') {
+         		header('Status: 303 See Other');
+         	} else {
+         		header('HTTP/1.1 303 See Other');
+         	}
+        }
 
 //		header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/index.php?section=home');
 		header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/index.php?section=home');
