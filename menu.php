@@ -113,6 +113,6 @@
 		} else {
 			   echo "<li>";
 		}
-		echo "<a href='index.php?section=logout'><span>Logout</span></a></li>";
+		echo "<a href='logout.php'><span>Logout</span></a></li>";
    ?>
 </ul>
