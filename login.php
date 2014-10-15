@@ -8,16 +8,37 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	session_start();
 
-    $username = $_POST['username'];
-    $passwort = $_POST['passwort'];
+    $user = $_POST['user'];
+    $pass = $_POST['pass'];
 
     $hostname = $_SERVER['HTTP_HOST'];
     $path = dirname($_SERVER['PHP_SELF']);
 
-    // Benutzername und Passwort werden überprüft
-    if ($username == 'benjamin' && $passwort == 'geheim') {
+	// Access database to verify credentials
+	include "mysql/credentials.inc";
+	$mysqli = new mysqli($host,$username,$password,$database);
+
+	// Verbindung prüfen
+	if (mysqli_connect_errno()) {
+		printf ("Verbindung fehlgeschlagen: %s\n", mysqli_connect_error());
+		exit();
+	}
+
+	$passmd5 = md5($pass);
+
+	// Select the user from database
+	$query = $mysqli->query ("SELECT id, firstname, lastname
+							  FROM user
+							  WHERE user = '$user'
+							  AND password = '$passmd5'
+							  ");
+
+	if ($result = $query->fetch_object()) {
+		// we found the user in database
+
     	$_SESSION['loggedin'] = true;
 		$_SESSION['TIME'] = time();
+		$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
 
         // Weiterleitung zur geschützten Startseite
         if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
@@ -69,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <table>
                     <tr>
                         <td>Username: </td>
-                        <td><input type="text" name="username" size="20" value="" maxlength="30" tabindex="1"/></td>
+                        <td><input type="text" name="user" size="20" value="" maxlength="30" tabindex="1"/></td>
                     </tr><tr>
                         <td>Password: </td>
-                        <td><input type="password" name="passwort" size="20" value="" maxlength="30" tabindex="2"/></td>
+                        <td><input type="password" name="pass" size="20" value="" maxlength="30" tabindex="2"/></td>
                     </tr>
                 </table>
                 <br />

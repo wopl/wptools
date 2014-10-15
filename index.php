@@ -42,7 +42,7 @@ if (isset ($_GET["section"]))
             <div id="header">
             	<table width="980px"><tr>
 					<td align="left" valign="bottom"><h3>Wolfram Plettscher's Project Tools</h3></td>
-					<td align="right" valign="middle"></td>
+					<td align="right" valign="bottom"><h3> <?php echo $_SESSION['welcome']; ?> </h3></td>
 				</tr></table>
             </div>
         
