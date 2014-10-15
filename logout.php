@@ -11,6 +11,7 @@
     $hostname = $_SERVER['HTTP_HOST'];
     $path = dirname($_SERVER['PHP_SELF']);
 
-    header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
+//    header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/login.php');
 ?>
 
