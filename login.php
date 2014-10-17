@@ -5,6 +5,8 @@
 // **                                                                              **
 // **********************************************************************************
 
+include "inc/menuhref.inc";
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	session_start();
 
@@ -49,23 +51,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          	}
         }
 
-//		header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/index.php?section=home');
-		header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/index.php?section=home');
+		header ('Location: ' . addsslproxy ('index.php?section=home'));
         exit;
 	}
 }
 
 ?>
 
+<!--
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="https://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+-->
+<!DOCTYPE html>
+<html>
 <head>
+
     <title>WP Tools</title>
     <link href="css/style.css" rel="stylesheet" type="text/css">
 	<?php
 		include ('css/menu.inc');
 		include ('css/stdbutton.inc');
 	?>
+
 </head>
  
 <body>
@@ -80,13 +87,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <div id="cssmenu">
             <ul>
-                <li class='active'><a href='login.php'><span>Login</span></a></li>
+                <li class='active'><a href='<?php //echo addsslproxy ('login.php')?>'><span>Login</span></a></li>
             </ul>
         </div>
             
+
         <div id="contentbody">
             <h1>Wolfram Plettscher's Project Tools</h1>
-            <form action="login.php" method="post">
+            <form action="<?php //echo addsslproxy ('login.php')?>" method="post">
                 <table>
                     <tr>
                         <td>Username: </td>
@@ -104,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </table>
             </form>
         </div>
+        
  	</div>
         
 	<div id="footer">
