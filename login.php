@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** login.php                                     (c) Wolfram Plettscher 10/2014 **
+// ** login.php                                     (c) Wolfram Plettscher 11/2014 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     	$_SESSION['loggedin'] = true;
 		$_SESSION['TIME'] = time();
 		$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
+		$_SESSION['userid'] = "{$result->id}";
+		$_SESSION['usershort'] = $user;
 
         // Weiterleitung zur geschützten Startseite
         if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
