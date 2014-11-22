@@ -1,10 +1,10 @@
 <!-- ---------------------------------------------------------------------------- -->
 <!--                                                                              -->
-<!-- user.php                                      (c) Wolfram Plettscher 09/2014 -->
+<!-- user.php                                      (c) Wolfram Plettscher 11/2014 -->
 <!--                                                                              -->
 <!-- ---------------------------------------------------------------------------- -->
 
-<h1>Verwaltung Benutzer / Monteure</h1>
+<h1>Verwaltung Benutzer</h1>
 
 <?php
 include "mysql/credentials.inc";

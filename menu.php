@@ -9,7 +9,7 @@ include "inc/menuhref.inc";
 echo "<ul>";
 
 	// Menu "Home"
-	href ($section, "home", "Home", "index.php?section=home");
+	href ($section, "home", "Home", "index.php?section=home", "all");
 
 	// Menu "Time" with submenus
 	$li = "<li class='has-sub'>";
@@ -20,8 +20,8 @@ echo "<ul>";
 	echo $li;
 	hrefsub ("Time", "#");
 		echo "<ul>";		
-			href ($section, "task", "Task", "index.php?section=task");
-			href ($section, "travel", "Travel", "index.php?section=travel");
+//			href ($section, "task", "Task", "index.php?section=task");
+			href ($section, "travel", "Travel", "index.php?section=travel", "all");
 		echo "</ul>";
 	echo "</li>";
 	
@@ -34,8 +34,8 @@ echo "<ul>";
 	echo $li;
 	hrefsub ("Tasks", "#");
 		echo "<ul>";		
-			href ($section, "task2", "Task1", "index.php?section=task2");
-			href ($section, "task2", "Task2", "index.php?section=task2");
+			href ($section, "task2", "Task1", "index.php?section=task2", "all");
+			href ($section, "task2", "Task2", "index.php?section=task2", "all");
 		echo "</ul>";
 	echo "</li>";
 
@@ -48,8 +48,8 @@ echo "<ul>";
 	echo $li;
 	hrefsub ("People", "#");
 		echo "<ul>";		
-			href ($section, "people", "People1", "index.php?section=people");
-			href ($section, "people", "People2", "index.php?section=people");
+			href ($section, "people", "People1", "index.php?section=people", "all");
+			href ($section, "people", "People2", "index.php?section=people", "all");
 		echo "</ul>";
 	echo "</li>";
 
@@ -62,16 +62,16 @@ echo "<ul>";
 	echo $li;
 	hrefsub ("Admin", "#");
 		echo "<ul>";		
-			href ($section, "admin", "Admin1", "index.php?section=admin");
-			href ($section, "admin", "Admin2", "index.php?section=admin");
-			href ($section, "user", "Benutzer", "index.php?section=user");
-			href ($section, "impressum", "Impressum", "index.php?section=impressum");
+//			href ($section, "admin", "Admin1", "index.php?section=admin");
+//			href ($section, "admin", "Admin2", "index.php?section=admin");
+			href ($section, "user", "Benutzer", "index.php?section=user", "root");
+			href ($section, "impressum", "Impressum", "index.php?section=impressum", "all");
 		echo "</ul>";
 	echo "</li>";
 	
 
 	// Menu "Logout"
-	href ($section, "logout", "Logout", "logout.php");
+	href ($section, "logout", "Logout", "logout.php", "all");
    
 echo "</ul></br>";
 ?>

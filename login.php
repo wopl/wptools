@@ -44,6 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$_SESSION['userid'] = "{$result->id}";
 		$_SESSION['usershort'] = $user;
 
+		// get group rights
+		$query = $mysqli->query ("SELECT groupshort
+								  FROM user2group
+								  WHERE usershort = '$user'
+								  ");
+		if ($result = $query->fetch_object()) {
+			$_SESSION['usergroup'] = "{$result->groupshort}";
+		}
+
         // Weiterleitung zur geschützten Startseite
         if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
         	if (php_sapi_name() == 'cgi') {
