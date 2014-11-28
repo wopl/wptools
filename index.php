@@ -41,8 +41,11 @@ if (isset ($_GET["section"]))
 
             <div id="header">
             	<table width="980px"><tr>
-					<td align="left" valign="bottom"><h3>Wolfram Plettscher's Project Tools</h3></td>
-					<td align="right" valign="bottom"><h3> <?php echo $_SESSION['welcome']; ?> </h3></td>
+					<td align="left" valign="bottom"><b>Wolfram Plettscher's Project Tools</b></td>
+					<td align="right" valign="bottom"><b><?php echo $_SESSION['welcome']; ?></b></td>
+				</tr><tr>
+                	<td></td>
+                    <td align="right" valign="bottom"><b><?php echo $_SESSION['project']; ?></b></td>
 				</tr></table>
             </div>
         
@@ -57,7 +60,7 @@ if (isset ($_GET["section"]))
         </div>
 
         <div id="footer">
-            &copy; Bluefish Communications, Wolfram Plettscher 2014
+            &copy; Wolfram Plettscher 2014
         </div>
     
     </body>

@@ -64,6 +64,7 @@ echo "<ul>";
 		echo "<ul>";		
 //			href ($section, "admin", "Admin1", "index.php?section=admin");
 //			href ($section, "admin", "Admin2", "index.php?section=admin");
+			href ($section, "projsel", "Project Selection", "index.php?section=projsel", "all");
 			href ($section, "user", "Benutzer", "index.php?section=user", "root");
 			href ($section, "impressum", "Impressum", "index.php?section=impressum", "all");
 		echo "</ul>";

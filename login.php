@@ -52,6 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($result = $query->fetch_object()) {
 			$_SESSION['usergroup'] = "{$result->groupshort}";
 		}
+		
+		// select default project
+		$query = $mysqli->query ("SELECT projid, projshort
+								  FROM user2proj
+								  WHERE usershort = '$user'
+								  ORDER BY defaultproj DESC, projshort ASC
+								  ");
+		if ($result = $query->fetch_object()) {
+			$_SESSION['project'] = "Project: " . "{$result->projshort}";
+			$_SESSION['projid'] = "{$result->projid}";
+		}
 
         // Weiterleitung zur geschützten Startseite
         if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {

@@ -32,6 +32,9 @@
 //		case "database":
 //			include ("database.php");
 //			break;
+		case "projsel":
+			include ("projsel.php");
+			break;
 		case "user":
 			if ($_SESSION['usergroup'] == "root")
 				include ("user.php");
