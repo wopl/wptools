@@ -105,7 +105,6 @@ echo "</form>";
 ?>
 
 <?php
-$result->close();
-$mysqli -> close();
+$mysqli->close();
 ?>
 

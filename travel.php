@@ -161,7 +161,6 @@ echo "</table><br /><br />";
 </form>
 
 <?php
-$result->close();
-$mysqli -> close();
+$mysqli->close();
 ?>
 

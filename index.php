@@ -58,6 +58,9 @@ if (isset ($_GET["section"]))
             </div>
             
         </div>
+        <div id="kicker">
+            <?php echo $_SESSION['kicker']; ?>
+        </div>
 
         <div id="footer">
             &copy; Wolfram Plettscher 2014

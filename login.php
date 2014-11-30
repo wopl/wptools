@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
 		$_SESSION['userid'] = "{$result->id}";
 		$_SESSION['usershort'] = $user;
+		$_SESSION['kicker'] = "";
 
 		// get group rights
 		$query = $mysqli->query ("SELECT groupshort
