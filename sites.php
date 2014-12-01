@@ -32,6 +32,9 @@
 //		case "database":
 //			include ("database.php");
 //			break;
+		case "passwd":
+			include ("passwd.php");
+			break;
 		case "projsel":
 			include ("projsel.php");
 			break;

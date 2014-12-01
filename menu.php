@@ -6,6 +6,9 @@
 // **********************************************************************************
 include "inc/menuhref.inc";
 
+// clear Kicker box if menu is selected
+$_SESSION['kicker'] = "";
+
 echo "<ul>";
 
 	// Menu "Home"
@@ -55,17 +58,19 @@ echo "<ul>";
 
 	// Menu "Admin" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "admin") || ($section == "user") || ($section == "impressum")){
+	if (($section == "passwd") ||
+		($section == "projsel") ||
+		($section == "user") ||
+		($section == "impressum")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}
 	echo $li;
 	hrefsub ("Admin", "#");
 		echo "<ul>";		
-//			href ($section, "admin", "Admin1", "index.php?section=admin");
-//			href ($section, "admin", "Admin2", "index.php?section=admin");
+			href ($section, "passwd", "Change Password", "index.php?section=passwd", "all");
 			href ($section, "projsel", "Project Selection", "index.php?section=projsel", "all");
-			href ($section, "user", "Benutzer", "index.php?section=user", "root");
+			href ($section, "user", "User", "index.php?section=user", "root");
 			href ($section, "impressum", "Impressum", "index.php?section=impressum", "all");
 		echo "</ul>";
 	echo "</li>";
