@@ -45,6 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$_SESSION['usershort'] = $user;
 		$_SESSION['kicker'] = "";
 
+		// update last login and # of logins
+		$myid = "{$result->id}";
+		$query = $mysqli->query ("UPDATE user
+								  SET sessionctr = sessionctr + 1
+								  WHERE id = '$myid'");
+
 		// get group rights
 		$query = $mysqli->query ("SELECT groupshort
 								  FROM user2group
@@ -61,8 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								  ORDER BY defaultproj DESC, projshort ASC
 								  ");
 		if ($result = $query->fetch_object()) {
-			$_SESSION['project'] = "Project: " . "{$result->projshort}";
-			$_SESSION['projid'] = "{$result->projid}";
+			$myprojid = "{$result->projid}";
+			$_SESSION['projid'] = $myprojid;
+			$query = $mysqli->query ("SELECT projlong
+									  FROM project
+									  WHERE projid = '$myprojid'
+									  ");
+			if ($result = $query->fetch_object()) {
+				$_SESSION['project'] = "Project: " . "{$result->projlong}";
+			}
 		}
 
         // Weiterleitung zur geschützten Startseite

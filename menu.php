@@ -44,15 +44,16 @@ echo "<ul>";
 
 	// Menu "People" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "people") || ($section == "people")){
+	if (($section == "team") || ($section == "teamgroups") || ($section == "teamedit")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}
 	echo $li;
 	hrefsub ("People", "#");
 		echo "<ul>";		
-			href ($section, "people", "People1", "index.php?section=people", "all");
-			href ($section, "people", "People2", "index.php?section=people", "all");
+			href ($section, "team", "Project Team List", "index.php?section=team", "all");
+			href ($section, "teamedit", "New Project Member", "index.php?section=teamedit", "all");
+			href ($section, "teamgroups", "Edit Team Groups", "index.php?section=teamgroups", "all");
 		echo "</ul>";
 	echo "</li>";
 

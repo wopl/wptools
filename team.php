@@ -1,10 +1,10 @@
 <!-- ---------------------------------------------------------------------------- -->
 <!--                                                                              -->
-<!-- projsel.php                                   (c) Wolfram Plettscher 11/2014 -->
+<!-- team.php                                      (c) Wolfram Plettscher 12/2014 -->
 <!--                                                                              -->
 <!-- ---------------------------------------------------------------------------- -->
 
-<h1>Project Selection</h1>
+<h1>Project Team</h1>
 
 <?php
 include "mysql/credentials.inc";
@@ -17,25 +17,19 @@ if (mysqli_connect_errno()) {
 	exit();
 }
 
-$mysqli2 = new mysqli($host,$username,$password,$database);
-
-// Verbindung prüfen
-if (mysqli_connect_errno()) {
-	printf ("Verbindung fehlgeschlagen: %s\n", mysqli_connect_error());
-	exit();
-}
-
 //-----------------------------------------------------------------------------------
 // react on previously pushed button to update mySQL database                                                     ---
 //-----------------------------------------------------------------------------------
 
-	$myuser = $_SESSION['usershort'];
+$myuser = $_SESSION['usershort'];
+$myuserid = $_SESSION['userid'];
+$myprojid = $_SESSION['projid'];
 
-	$myselect = $_POST['select'];
-	$mydefault = $_POST['default'];
+//$myselect = $_POST['select'];
+//$mydefault = $_POST['default'];
 
-if (isset($_POST['submit'])) {
-
+//if (isset($_POST['submit'])) {
+/*
 	// select selected project
 	$query = $mysqli->query ("SELECT projid, projshort
 							  FROM user2proj
@@ -44,18 +38,8 @@ if (isset($_POST['submit'])) {
 							  ORDER BY defaultproj DESC, projshort ASC
 							 ");
 	if ($result = $query->fetch_object()) {
-//		$_SESSION['project'] = "Project: " . "{$result->projshort}";
+		$_SESSION['project'] = "Project: " . "{$result->projshort}";
 		$_SESSION['projid'] = "{$result->projid}";
-	}
-    $myprojid = $result->projid;
-
-	// select long name for selected project
-	$query = $mysqli->query ("SELECT projlong
-							  FROM project
-							  WHERE projid = '$myprojid'
-							 ");
-	if ($result = $query->fetch_object()) {
-		$_SESSION['project'] = "Project: " . "{$result->projlong}";
 	}
 
 	// update default project into db
@@ -73,7 +57,7 @@ if (isset($_POST['submit'])) {
 	echo "<input type='text' name='sqldone'>";
 	echo "</form></body>";
 }
-
+*/
 // This path will be executed after sql update (to update all values on screen based on selection)
 // Currently there is no extra action needed; refresh of screen is done at this moment
 //if (isset($_POST['sqldone'])) {
@@ -82,48 +66,53 @@ if (isset($_POST['submit'])) {
 
 
 //-----------------------------------------------------------------------------------
-// show user-project assignements                                                      ---
+// show team members                                                              ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT projid, projshort, defaultproj FROM user2proj
-						  WHERE usershort = '$myuser' ");
+$query = $mysqli->query ("SELECT teamid, firstname, lastname, company, location, dept, email, phone, position
+						  FROM team
+						  WHERE projid = '$myprojid'
+						  ORDER BY lastname ASC, firstname ASC ");
 
-echo "<form action='index.php?section=projsel' method='post'>"; 
+// echo "<form action='index.php?section=team' method='post'>"; 
 
+echo "<form action = 'index.php?section=teamedit' method='post'>";
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
 
 echo "<tr>
-	<th> Select </th>
-	<th> Default </th>
-	<th> Proj.-ID </th>
-	<th> Project </th>
+	<th> Lastname </th>
+	<th> Firstname </th>
+	<th> Company </th>
+	<th> Department </th>
+	<th> Position </th>
+	<th> Location </th>
+	<th> E-Mail </th>
+	<th> Phone </th>
+	<th></th>
+	<th></th>
 	</tr>\n";
 	
 while ($result = $query->fetch_object())
 	{
-	// now select for this element the long-name of project
-	$myprojid = $result->projid;
-	$query2 = $mysqli2->query ("SELECT projlong FROM project
-							    WHERE projid = '$myprojid' ");
-	$result2 = $query2->fetch_object();
-		
+
 	echo "<tr>";
-
-	if ($result->projid == $_SESSION['projid'])
-		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' checked/>" . "</td>";
-	else
-		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' />" . "</td>";
-
-	if ($result->defaultproj == '1' )
-		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' checked/>" . "</td>";
-	else
-		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' />" . "</td>";
-
-	echo "<td>" . "{$result->projid}" . "</td>"
-		. "<td>" . "{$result2->projlong}" . "</td>"
+	echo "<td>" . "{$result->lastname}" . "</td>"
+		. "<td>" . "{$result->firstname}" . "</td>"
+		. "<td>" . "{$result->company}" . "</td>"
+		. "<td>" . "{$result->dept}" . "</td>"
+		. "<td>" . "{$result->position}" . "</td>"
+		. "<td>" . "{$result->location}" . "</td>"
+		. "<td>" . "{$result->email}" . "</td>"
+		. "<td>" . "{$result->phone}" . "</td>"
+		. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
+		. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' />" . "</td>"
 		. "</tr>";
+
 	}
 echo "</table><br /><br />";
-echo "<input class='css_btn_class' name='submit' type='submit' value='submit' />";
+echo "</form>";
+
+echo "<form action='index.php?section=teamedit' method='post'>";
+echo "<input class='css_btn_class' name='new' type='submit' value='new' />";
 echo "</form>";
 
 ?>

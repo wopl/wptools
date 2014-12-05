@@ -1,6 +1,6 @@
 <!-- ---------------------------------------------------------------------------- -->
 <!--                                                                              -->
-<!-- projsel.php                                   (c) Wolfram Plettscher 11/2014 -->
+<!-- teamgroups.php                                (c) Wolfram Plettscher 12/2014 -->
 <!--                                                                              -->
 <!-- ---------------------------------------------------------------------------- -->
 
@@ -10,14 +10,6 @@
 include "mysql/credentials.inc";
 
 $mysqli = new mysqli($host,$username,$password,$database);
-
-// Verbindung prüfen
-if (mysqli_connect_errno()) {
-	printf ("Verbindung fehlgeschlagen: %s\n", mysqli_connect_error());
-	exit();
-}
-
-$mysqli2 = new mysqli($host,$username,$password,$database);
 
 // Verbindung prüfen
 if (mysqli_connect_errno()) {
@@ -44,18 +36,8 @@ if (isset($_POST['submit'])) {
 							  ORDER BY defaultproj DESC, projshort ASC
 							 ");
 	if ($result = $query->fetch_object()) {
-//		$_SESSION['project'] = "Project: " . "{$result->projshort}";
+		$_SESSION['project'] = "Project: " . "{$result->projshort}";
 		$_SESSION['projid'] = "{$result->projid}";
-	}
-    $myprojid = $result->projid;
-
-	// select long name for selected project
-	$query = $mysqli->query ("SELECT projlong
-							  FROM project
-							  WHERE projid = '$myprojid'
-							 ");
-	if ($result = $query->fetch_object()) {
-		$_SESSION['project'] = "Project: " . "{$result->projlong}";
 	}
 
 	// update default project into db
@@ -100,12 +82,6 @@ echo "<tr>
 	
 while ($result = $query->fetch_object())
 	{
-	// now select for this element the long-name of project
-	$myprojid = $result->projid;
-	$query2 = $mysqli2->query ("SELECT projlong FROM project
-							    WHERE projid = '$myprojid' ");
-	$result2 = $query2->fetch_object();
-		
 	echo "<tr>";
 
 	if ($result->projid == $_SESSION['projid'])
@@ -119,7 +95,7 @@ while ($result = $query->fetch_object())
 		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' />" . "</td>";
 
 	echo "<td>" . "{$result->projid}" . "</td>"
-		. "<td>" . "{$result2->projlong}" . "</td>"
+		. "<td>" . "{$result->projshort}" . "</td>"
 		. "</tr>";
 	}
 echo "</table><br /><br />";
