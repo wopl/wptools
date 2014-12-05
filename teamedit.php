@@ -38,7 +38,7 @@ $myphone = $_POST['r_phone'];
 $myposition = $_POST['r_position'];
 
 if (isset($_POST['edit'])) {
-	// this has been triggered by teamelist page; show all data for editing
+	// this has been triggered by teamlist page; show all data for editing
 	$query = $mysqli->query ("SELECT firstname, lastname, company, location, dept, email, phone, position
 							FROM team
 							WHERE teamid = '$myteamid'
