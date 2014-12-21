@@ -155,6 +155,54 @@ input {
 	color: black;
 }
 
+.sqltable3_1 {
+  background: #516eb1;
+  -webkit-box-shadow: 0 -4px 0 #516eb1, 0 -5px 0 #a6afd6, 0 -6px 0 #516eb1;
+  -moz-box-shadow: 0 -4px 0 #516eb1, 0 -5px 0 #a6afd6, 0 -6px 0 #516eb1;
+  box-shadow: 0 -4px 0 #516eb1, 0 -5px 0 #a6afd6, 0 -6px 0 #516eb1;
+  color: #ffffff;
+	text-align: left;
+	font-weight:bold;
+	font-size: 12px;
+}
+
+.sqltable3_2 {
+	text-align: left;
+	font-size: 12px;
+	background-color: #ffffff;
+	color: black;
+}
+.sqltable3_3 {
+	text-align: left;
+	font-size: 12px;
+	background-color: #ffffff;
+	color: black;
+}
+.sqltable3_4 {
+	text-align: left;
+	font-size: 12px;
+	background-color: #ffffff;
+	color: black;
+}
+.sqltable3_5 {
+	text-align: left;
+	font-size: 12px;
+	background-color: #e1e2e6;
+	color: black;
+}
+.sqltable3_6 {
+	text-align: left;
+	font-size: 12px;
+	background-color: #e1e2e6;
+	color: black;
+}
+.sqltable3_7 {
+	text-align: left;
+	font-size: 12px;
+	background-color: #e1e2e6;
+	color: black;
+}
+
 /* ******************************************************************************* */
 /* ***                                                                         *** */
 /* *** css-button                                                              *** */
