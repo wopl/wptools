@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** login.php                                     (c) Wolfram Plettscher 11/2014 **
+// ** login.php                                     (c) Wolfram Plettscher 01/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  	</div>
         
 	<div id="footer">
-		&copy; Wolfram Plettscher 2014
+		&copy; Wolfram Plettscher 2015
     </div>
 
 </body>

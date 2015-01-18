@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** menu.php                                      (c) Wolfram Plettscher 10/2014 **
+// ** menu.php                                      (c) Wolfram Plettscher 01/2015 **
 // **                                                                              **
 // **********************************************************************************
 include "inc/menuhref.inc";
@@ -23,7 +23,6 @@ echo "<ul>";
 	echo $li;
 	hrefsub ("Time", "#");
 		echo "<ul>";		
-//			href ($section, "task", "Task", "index.php?section=task");
 			href ($section, "travel", "Travel", "index.php?section=travel", "all");
 		echo "</ul>";
 	echo "</li>";
@@ -44,7 +43,7 @@ echo "<ul>";
 
 	// Menu "People" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "team") || ($section == "teamgroups") || ($section == "teamedit")){
+	if (($section == "team") || ($section == "teamedit")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}
@@ -53,7 +52,6 @@ echo "<ul>";
 		echo "<ul>";		
 			href ($section, "team", "Project Team List", "index.php?section=team", "all");
 			href ($section, "teamedit", "New Project Member", "index.php?section=teamedit", "all");
-			href ($section, "teamgroups", "Edit Team Groups", "index.php?section=teamgroups", "all");
 		echo "</ul>";
 	echo "</li>";
 
@@ -61,6 +59,7 @@ echo "<ul>";
 	$li = "<li class='has-sub'>";
 	if (($section == "passwd") ||
 		($section == "projsel") ||
+		($section == "projgroups") ||
 		($section == "user") ||
 		($section == "impressum")){
 		// Highlight Top-Menu
@@ -71,6 +70,7 @@ echo "<ul>";
 		echo "<ul>";		
 			href ($section, "passwd", "Change Password", "index.php?section=passwd", "all");
 			href ($section, "projsel", "Project Selection", "index.php?section=projsel", "all");
+//			href ($section, "projgroups", "Edit Project Groups", "index.php?section=projgroups", "root");
 			href ($section, "user", "User", "index.php?section=user", "root");
 			href ($section, "impressum", "Impressum", "index.php?section=impressum", "all");
 		echo "</ul>";

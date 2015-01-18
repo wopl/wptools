@@ -1,6 +1,6 @@
 <!-- ---------------------------------------------------------------------------- -->
 <!--                                                                              -->
-<!-- sites.php                                     (c) Wolfram Plettscher 12/2014 -->
+<!-- sites.php                                     (c) Wolfram Plettscher 01/2015 -->
 <!--                                                                              -->
 <!-- ---------------------------------------------------------------------------- -->
 
@@ -29,9 +29,6 @@
 		case "team":
 			include ("team.php");
 			break;
-		case "teamgroups":
-			include ("teamgroups.php");
-			break;
 		case "teamedit":
 			include ("teamedit.php");
 			break;
@@ -44,6 +41,9 @@
 			break;
 		case "projsel":
 			include ("projsel.php");
+			break;
+		case "projgroups":
+			include ("projgroups.php");
 			break;
 		case "user":
 			if ($_SESSION['usergroup'] == "root")

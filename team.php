@@ -1,6 +1,6 @@
 <!-- ---------------------------------------------------------------------------- -->
 <!--                                                                              -->
-<!-- team.php                                      (c) Wolfram Plettscher 12/2014 -->
+<!-- team.php                                      (c) Wolfram Plettscher 01/2015 -->
 <!--                                                                              -->
 <!-- ---------------------------------------------------------------------------- -->
 
@@ -91,7 +91,7 @@ if ($mygrouping == "0") {
 if ($mygrouping == "1") {
 
 	$query2 = $mysqli2->query ("SELECT groupid, name
-							  FROM teamgroup
+							  FROM projgroup
 							  WHERE projid = '$myprojid'
 							  ORDER BY name ASC ");
 

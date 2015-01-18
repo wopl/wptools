@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** index.php                                     (c) Wolfram Plettscher 10/2014 **
+// ** index.php                                     (c) Wolfram Plettscher 01/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -63,7 +63,7 @@ if (isset ($_GET["section"]))
         </div>
 
         <div id="footer">
-            &copy; Wolfram Plettscher 2014
+            &copy; Wolfram Plettscher 2015
         </div>
     
     </body>

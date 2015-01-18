@@ -1,6 +1,6 @@
 <!-- ---------------------------------------------------------------------------- -->
 <!--                                                                              -->
-<!-- projsel.php                                   (c) Wolfram Plettscher 11/2014 -->
+<!-- projsel.php                                   (c) Wolfram Plettscher 01/2015 -->
 <!--                                                                              -->
 <!-- ---------------------------------------------------------------------------- -->
 
@@ -34,7 +34,7 @@ if (mysqli_connect_errno()) {
 	$myselect = $_POST['select'];
 	$mydefault = $_POST['default'];
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) || isset($_POST['editgroups'])) {
 
 	// select selected project
 	$query = $mysqli->query ("SELECT projid, projshort
@@ -68,8 +68,13 @@ if (isset($_POST['submit'])) {
 		 AND projid = '$mydefault'");
 
 	// now we need to refresh the screen; therefore these javascript lines
+	// switch to 'Project-Groups' form if this button was pressed
+	$mysqli->close();
 	echo "<body onLoad='document.form1.submit()'>";
-	echo "<form name='form1' method='post' action='index.php?section=projsel'>";
+	if (isset($_POST['submit']))
+		echo "<form name='form1' method='post' action='index.php?section=projsel'>";
+	else
+		echo "<form name='form1' method='post' action='index.php?section=projgroups'>";
 	echo "<input type='text' name='sqldone'>";
 	echo "</form></body>";
 }
@@ -85,9 +90,10 @@ if (isset($_POST['submit'])) {
 // show user-project assignements                                                      ---
 //-----------------------------------------------------------------------------------
 $query = $mysqli->query ("SELECT projid, projshort, defaultproj FROM user2proj
-						  WHERE usershort = '$myuser' ");
+						  WHERE usershort = '$myuser'
+						  ORDER by projid ASC ");
 
-echo "<form action='index.php?section=projsel' method='post'>"; 
+echo "<form method='post' action='index.php?section=projsel'>"; 
 
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
 
@@ -109,24 +115,30 @@ while ($result = $query->fetch_object())
 	echo "<tr>";
 
 	if ($result->projid == $_SESSION['projid'])
-		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' checked/>" . "</td>";
+		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' checked>" . "</td>";
 	else
-		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' />" . "</td>";
+		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' >" . "</td>";
 
 	if ($result->defaultproj == '1' )
-		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' checked/>" . "</td>";
+		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' checked>" . "</td>";
 	else
-		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' />" . "</td>";
+		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' >" . "</td>";
 
 	echo "<td>" . "{$result->projid}" . "</td>"
 		. "<td>" . "{$result2->projlong}" . "</td>"
 		. "</tr>";
 	}
 echo "</table><br /><br />";
-echo "<input class='css_btn_class' name='submit' type='submit' value='submit' />";
-echo "</form>";
 
 ?>
+
+    <table>
+        <tr>
+        <td><input class='css_btn_class' name='submit' type='submit' value='submit' /></td>
+        <td><input class='css_btn_class' name='editgroups' type='submit' value='edit groups' /></td>
+        </tr>
+    </table>
+</form>
 
 <?php
 $mysqli->close();
