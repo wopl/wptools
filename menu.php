@@ -43,7 +43,7 @@ echo "<ul>";
 
 	// Menu "People" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "team") || ($section == "teamedit")){
+	if (($section == "team") || ($section == "team4") || ($section == "teamedit")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}

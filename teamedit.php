@@ -36,10 +36,11 @@ $mydept = $_POST['r_dept'];
 $myemail = $_POST['r_email'];
 $myphone = $_POST['r_phone'];
 $myposition = $_POST['r_position'];
+$myremarks = $_POST['r_remarks'];
 
 if (isset($_POST['edit'])) {
 	// this has been triggered by teamlist page; show all data for editing
-	$query = $mysqli->query ("SELECT firstname, lastname, company, location, dept, email, phone, position
+	$query = $mysqli->query ("SELECT firstname, lastname, company, location, dept, email, phone, position, remarks
 							FROM team
 							WHERE teamid = '$myteamid'
 							");
@@ -52,6 +53,7 @@ if (isset($_POST['edit'])) {
 		$myemail = "{$result->email}";
 		$myphone = "{$result->phone}";
 		$myposition = "{$result->position}";
+		$myremarks = "{$result->remarks}";
 	}
 
 } elseif (isset($_POST['save'])) {
@@ -60,9 +62,9 @@ if (isset($_POST['edit'])) {
 
 		// teamid is empty, therefore create a new record
 		$query = $mysqli->query ("	INSERT INTO team	(projid, firstname, lastname, company,
-														 location, dept, email, phone, position)
+														 location, dept, email, phone, position, remarks)
 									VALUES				('$myprojid', '$myfirstname', '$mylastname', '$mycompany',
-														 '$mylocation', '$mydept', '$myemail', '$myphone', '$myposition')");
+														 '$mylocation', '$mydept', '$myemail', '$myphone', '$myposition', '$myremarks')");
 		// select new teamid
 		$query = $mysqli->query ("SELECT teamid
 							  	FROM team
@@ -84,7 +86,8 @@ if (isset($_POST['edit'])) {
 			dept = '$mydept',
 			email = '$myemail',
 			phone = '$myphone',
-			position = '$myposition'
+			position = '$myposition',
+			remarks = '$myremarks'
 			WHERE teamid = '$myteamid'
 			AND projid = '$myprojid'");
 		$_SESSION['kicker'] = "Team member successfully updated.";
@@ -165,6 +168,9 @@ if (isset($_POST['edit'])) {
         	<td><input type="text" name="r_email" size="40" value="<?php echo $myemail; ?>" maxlength="64" tabindex="7"/></td>
         	<td>Phone: </td>
         	<td><input type="text" name="r_phone" size="40" value="<?php echo $myphone; ?>" maxlength="64" tabindex="8"/></td>
+        </tr><tr>
+	       	<td>Remarks: </td>
+        	<td colspan="3"><input type="text" name="r_remarks" size="97" value="<?php echo $myremarks; ?>" maxlength="64" tabindex="9"/></td>
         </tr>
     </table>
 	<br />
