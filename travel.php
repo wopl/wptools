@@ -1,12 +1,15 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- travel.php                                    (c) Wolfram Plettscher 11/2014 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
-<h1>Travel Notes</h1>
-
 <?php
+// **********************************************************************************
+// **                                                                              **
+// ** travel.php                                    (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
+echo "<h1>Travel Notes</h1>";
+
 include "mysql/credentials.inc";
 
 $mysqli = new mysqli($host,$username,$password,$database);

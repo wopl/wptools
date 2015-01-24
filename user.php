@@ -1,12 +1,15 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- user.php                                      (c) Wolfram Plettscher 11/2014 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
-<h1>Verwaltung Benutzer</h1>
-
 <?php
+// **********************************************************************************
+// **                                                                              **
+// ** user.php                                      (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
+echo "<h1>User Maintenance</h1>";
+
 include "mysql/credentials.inc";
 
 $mysqli = new mysqli($host,$username,$password,$database);
@@ -56,10 +59,10 @@ echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
 echo "<tr>
 	<th> ID </th>
 	<th> User </th>
-	<th> Vorname </th>
-	<th> Nachname </th>
+	<th> Firstname </th>
+	<th> Lastname </th>
 	<th> Mail </th>
-	<th> Telefon </th>
+	<th> Phone </th>
 	<th></th>
 	<th></th>
 	<th></th>
@@ -97,12 +100,12 @@ echo "</table><br /><br />";
     	<tr>
          	<td>User-ID: </td>
         	<td><input type="text" name="userid" size="20" value="<?php echo $_POST["r_userid"]; ?>" maxlength="30" tabindex="1" readonly/></td>
-        	<td>Vorname: </td>
+        	<td>Firstname: </td>
         	<td><input type="text" name="vorname" size="40" value="<?php echo $_POST["r_firstname"]; ?>" maxlength="64" tabindex="3"/></td>
         </tr><tr>
 	       	<td>User-Name: </td>
         	<td><input type="text" name="username" size="20" value="<?php echo $_POST["r_username"]; ?>" maxlength="30" tabindex="2"/></td>
-        	<td>Nachname: </td>
+        	<td>Lastname: </td>
         	<td><input type="text" name="nachname" size="40" value="<?php echo $_POST["r_lastname"]; ?>" maxlength="64" tabindex="4"/></td>
         </tr><tr>
 			<td></td>
@@ -112,7 +115,7 @@ echo "</table><br /><br />";
         </tr><tr>
 			<td></td>
             <td></td>
-        	<td>Telefon: </td>
+        	<td>Phone: </td>
         	<td><input type="text" name="phone" size="40" value="<?php echo $_POST["r_phone"]; ?>" maxlength="64" tabindex="6"/></td>
         </tr>
     </table>

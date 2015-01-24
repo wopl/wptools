@@ -29,6 +29,7 @@ if (isset ($_GET["section"]))
 			include ('css/menu.inc');
 			include ('css/zebratable.inc');
 			include ('css/stdbutton.inc'); 
+			include ('css/selectbox.inc'); 
 		?>
     </head>
 

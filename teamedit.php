@@ -1,12 +1,15 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- teamedit.php                                  (c) Wolfram Plettscher 12/2014 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
-<h1>Edit Project Teammember</h1>
-
 <?php
+// **********************************************************************************
+// **                                                                              **
+// ** teamedit.php                                  (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
+echo "<h1>Edit Project Teammember</h1>";
+
 include "mysql/credentials.inc";
 
 $mysqli = new mysqli($host,$username,$password,$database);
@@ -179,11 +182,11 @@ if (isset($_POST['edit'])) {
     	<tr>
 <!--
  		<td><input class='css_btn_class' name='list' type='submit' value='show list' /></td>
- 		<td><input class='css_btn_class' name='group' type='submit' value='assign group' /></td>
  		<td><input class='css_btn_class' name='clear' type='submit' value='clear' /></td>
  		<td><input class='css_btn_class' name='delete' type='submit' value='delete' /></td>
 -->        
  		<td><input class='css_btn_class' name='save' type='submit' value='save' /></td>
+ 		<td><input class='css_btn_class' name='group' type='submit' value='assign group' formaction='index.php?section=teamassign' /></td>
         </tr>
     </table>
 

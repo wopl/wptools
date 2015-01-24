@@ -1,11 +1,14 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- home.php                                      (c) Wolfram Plettscher 11/2014 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
 <?php
-	$_SESSION['kicker'] = "";
+// **********************************************************************************
+// **                                                                              **
+// ** home.php                                      (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
+$_SESSION['kicker'] = "";
 ?>
 
 <h1>WP-Tools Landing Page</h1>
@@ -32,7 +35,7 @@ Currently we plan to implement the following:
 	<li>Time tracking of tasks/projects</li>
     <li>Travel notes needed for expense reclaim</li>
     <li>provide a convenient task-list</li>
-    <li>Project related contact list with RACI for tasks</li>
+    <li>Project related contact list</li>
 </ul>
 
 I hope, you find this tool useful. Let us know your opinion.</br></br>

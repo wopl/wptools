@@ -1,12 +1,15 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- projgroups.php                                (c) Wolfram Plettscher 01/2015 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
-<h1>Edit Project Groups</h1>
-
 <?php
+// **********************************************************************************
+// **                                                                              **
+// ** projgroups.php                                (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
+echo "<h1>Edit Project Groups</h1>";
+
 include "mysql/credentials.inc";
 
 $mysqli = new mysqli($host,$username,$password,$database);

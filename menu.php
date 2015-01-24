@@ -4,6 +4,10 @@
 // ** menu.php                                      (c) Wolfram Plettscher 01/2015 **
 // **                                                                              **
 // **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
 include "inc/menuhref.inc";
 
 // clear Kicker box if menu is selected
@@ -43,7 +47,7 @@ echo "<ul>";
 
 	// Menu "People" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "team") || ($section == "team4") || ($section == "teamedit")){
+	if (($section == "team") || ($section == "team4") || ($section == "teamedit") || ($section == "teamassign")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}

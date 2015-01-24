@@ -1,12 +1,15 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- projsel.php                                   (c) Wolfram Plettscher 01/2015 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
-<h1>Project Selection</h1>
-
 <?php
+// **********************************************************************************
+// **                                                                              **
+// ** projsel.php                                   (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
+
+echo "<h1>Project Selection</h1>";
+
 include "mysql/credentials.inc";
 
 $mysqli = new mysqli($host,$username,$password,$database);

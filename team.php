@@ -1,10 +1,12 @@
-<!-- ---------------------------------------------------------------------------- -->
-<!--                                                                              -->
-<!-- team.php                                      (c) Wolfram Plettscher 01/2015 -->
-<!--                                                                              -->
-<!-- ---------------------------------------------------------------------------- -->
-
 <?php
+// **********************************************************************************
+// **                                                                              **
+// ** team.php                                      (c) Wolfram Plettscher 01/2015 **
+// **                                                                              **
+// **********************************************************************************
+
+// Display page only, if authenticated, otherwise jump to login page
+include ('auth.php');
 
 include "mysql/credentials.inc";
 
@@ -62,7 +64,7 @@ else
 		<td colspan="4">
 <?php
 // Generate drop down list to select group(s)
-		echo "<select name='GroupSelection'>";
+		echo "<select class='selectbox' name='GroupSelection'>";
 
 		// first line of Drop-Down Box should show "all_groups"
 		if ($mygroupselect == "" || $mygroupselect == "all_groups")
@@ -263,9 +265,7 @@ if ($mygrouping == "0") {
 		}
 }
 
-?>
 
-<?php
 $mysqli->close();
 $mysqli2->close();
 ?>
