@@ -28,6 +28,7 @@ $myuserid = $_SESSION['userid'];
 $myprojid = $_SESSION['projid'];
 
 $myteamid = $_POST['r_teamid'];
+$mygroupid = $_POST['r_groupid'];
 $myfirstname = $_POST['r_firstname'];
 $mylastname = $_POST['r_lastname'];
 
@@ -37,16 +38,29 @@ echo "<h3>$myfirstname $mylastname</h3>";
 // react on previously pushed button to update mySQL database                                                     ---
 //-----------------------------------------------------------------------------------
 
-
+if (isset($_POST['change']))
+	{
+	if ($_POST['r_ischecked'])
+		{
+		// Delete Group Assignment
+//		$_SESSION['kicker'] = "Delete Group Assignment";
+		$query = $mysqli->query ("DELETE FROM team2group
+								  WHERE projid = '$myprojid'
+								  AND   teamid = '$myteamid'
+								  AND   groupid = '$mygroupid' ");
+		}
+	else
+		{
+		// Set Group Assignment
+//		$_SESSION['kicker'] = "Set Group Assignment";
+		$query = $mysqli->query ("	INSERT INTO team2group	(projid, teamid, groupid)
+									VALUES				('$myprojid', '$myteamid', '$mygroupid')");
+		}
+	}
 
 //-----------------------------------------------------------------------------------
 // show/edit team to group assignements                                                      ---
 //-----------------------------------------------------------------------------------
-//$query = $mysqli->query ("SELECT groupid, name
-//						  FROM projgroup
-//						  WHERE projid = '$myprojid'
-//						  ORDER by prio ASC ");
-
 $query = $mysqli->query ("SELECT projgroup.groupid, projgroup.name, team2group.teamid
 						  FROM projgroup
 						  LEFT JOIN team2group
@@ -67,36 +81,30 @@ echo "<tr>
 	<th></th>
 	<th></th>
 	<th></th>
+	<th></th>
 	</tr>\n";
 	
 while ($result = $query->fetch_object())
 	{
-//	$x_group = $result->groupid;
-//	$x_name = $result->name;
-//	$x_team = $result->teamid;
-//echo "<h3> - $x_group - $x_name - $x_team </h3>";
-
-
-	// now select for this element the long-name of project
-//	$myprojid = $result->projid;
-//	$query2 = $mysqli2->query ("SELECT projlong FROM project
-//							    WHERE projid = '$myprojid' ");
-//	$result2 = $query2->fetch_object();
-		
 	echo "<tr>";
 
-//		echo "<td>" . "<input type='checkbox' name='selected' value='{$result->projid}' checked>" . "</td>";
-
 		if ($result->teamid == $myteamid)
+			{
 			echo "<td>" . "<input type='checkbox' name='selected' disabled='disabled' checked>" . "</td>";
+			$my_ischecked = 1;
+			}
 		else
+			{
 			echo "<td>" . "<input type='checkbox' name='selected' disabled='disabled'>" . "</td>";
+			$my_ischecked = 0;
+			}
 		echo "<td>" . "{$result->name}" . "</td>";
 		echo "<form action='index.php?section=teamassign' method='post'>" 
 				. "<td>" . "<input type='hidden' id='uid1' name='r_groupid' value=" . "'{$result->groupid}'" . "></td>"
 				. "<td>" . "<input type='hidden' id='uid2' name='r_teamid' value=" . "'{$myteamid}'" . "></td>"
 				. "<td>" . "<input type='hidden' id='uid3' name='r_firstname' value=" . "'{$myfirstname}'" . "></td>"
 				. "<td>" . "<input type='hidden' id='uid4' name='r_lastname' value=" . "'{$mylastname}'" . "></td>"
+				. "<td>" . "<input type='hidden' id='uid5' name='r_ischecked' value=" . "'{$my_ischecked}'" . "></td>"
 				. "<td>" . "<input class='css_btn_class' name='change' type='submit' value='change' />" . "</td>"
 			. "</form>";
 
