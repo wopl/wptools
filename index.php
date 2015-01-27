@@ -31,6 +31,8 @@ if (isset ($_GET["section"]))
 			include ('css/stdbutton.inc'); 
 			include ('css/selectbox.inc'); 
 		?>
+        <link href="css/modal.css" rel="stylesheet">
+
     </head>
 
 <!-- ---------------------------------------------------------------------------- -->
@@ -66,7 +68,7 @@ if (isset ($_GET["section"]))
         <div id="footer">
             &copy; Wolfram Plettscher 2015
         </div>
-    
+
     </body>
 
 </html>
