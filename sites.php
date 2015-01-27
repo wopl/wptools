@@ -31,9 +31,6 @@ include ('auth.php');
 		case "team":
 			include ("team.php");
 			break;
-		case "team4":
-			include ("team4.php");
-			break;
 		case "teamedit":
 			include ("teamedit.php");
 			break;

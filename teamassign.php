@@ -137,7 +137,7 @@ if (isset($_POST['openmodal']))
 				echo "<h2>Remove Group Assignment</h2>";
 			echo "</div>";
 			echo "<div class='copy'>";
-				echo "<p>You are going to remove a group assignement for <b>$myfirstname $mylastname</b>." .
+				echo "<p>You are going to remove a group assignment for <b>$myfirstname $mylastname</b>." .
 				     " Below shown are remarks and role descriptions belonging to this group assignment.</p>";
 				echo "<p><b>Role: </b>$myrole</p>";
 				echo "<p><b>Remarks: </b>$myremarks</p>";
