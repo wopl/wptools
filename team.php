@@ -317,7 +317,8 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 								  ORDER BY prio ASC ");
 		}
 
-	while ($result2 = $query2->fetch_object()) {
+	while ($result2 = $query2->fetch_object())
+		{
 		$mygroupid = "{$result2->groupid}";
 
 		echo "<h2>Group: " . "{$result2->name}" . "</h2>";
@@ -329,47 +330,101 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 								  AND tg.teamid = t.teamid
 								  ORDER BY t.lastname ASC, t.firstname ASC ");
 
-		echo "<table class='sqltable3' border='0' cellspacing='0' cellpadding='2' >\n";
-		
-		echo "<tr>
-			<th> Lastname </th>
-			<th> Firstname </th>
-			<th> Company </th>
-			<th> Position </th>
-			<th></th>
-			<th></th>
-			<th></th>
-			<th></th>
-			</tr>\n";
+		echo "<table class='sqltable2' border='0' cellspacing='0' cellpadding='2' width='100%' >\n";
+		$sqltable_even = false;
+				
+			echo "<tr>
+				<th width='5%'> Name,</th>
+				<th width='10%'>Company</th>
+				<th width='15%'></th>
+				<th width='60%'> Role (within this group)</th>
+				<th></th>
+				<th width='6%'></th>
+				<th width='6%'></th>
+				</tr>\n";
 			
 		while ($result = $query->fetch_object())
 			{
-			echo "<tr>";
-			echo "<td>" . "{$result->lastname}" . "</td>"
-				. "<td>" . "{$result->firstname}" . "</td>"
-				. "<td>" . "{$result->company}" . "</td>"
-				. "<td>" . "{$result->position}" . "</td>"
-				. "</tr><tr>"
-				. "<form action='index.php?section=team' method='post'>"
-					. "<td>Role: </td>" 
-					. "<td colspan='7'>" . "<input type='input' id='uid1' name='r_role' size='130' value=" . "'{$result->role}'" . "></td>"
-				. "</tr><tr>"
-					. "<td>Remarks: </td>"
-					. "<td colspan='3'>" . "<input type='input' id='uid2' name='r_remarks' size='100' value=" . "'{$result->remarks}'" . "></td>"
-					. "<td>" . "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
-					. "<td>" . "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . "></td>"
-					. "<td>" . "<input class='css_btn_class' name='update' type='submit' value='update' />" . "</td>"
-				. "</form>"
-				. "<form action='index.php?section=teamedit' method='post'>" 
-					. "<td>" . "<input type='hidden' id='uid5' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
-					. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' />" . "</td>"
-				. "</form>"
-				. "</tr>";
-			}
-		echo "</table><br /><br />";
-		
-	}
-}
+			$sqltable_even = ! $sqltable_even;
+
+			if ($sqltable_even)
+				{
+//				echo "<p>EVEN</p>";
+				echo "<div class='sqltableeven'>";
+				$mytableclass = "class='sqltableeven'";
+				}
+			else
+				{
+//				echo "<p>ODD</p>";
+				echo "<div class='sqltableodd'>";
+				$mytableclass = "class='sqltableodd'";
+				}
+
+			echo "<form method='post'>";
+//				echo "<tr><th></th><th></th><th></th>";
+				echo "<tr $mytableclass>";
+					echo "<td colspan='3'>" . "<b>{$result->lastname} {$result->firstname}</b>, {$result->company}" . "</td>"
+						. "<td>" . "<input type='input' $mytableclass style='width:100%' id='uid1' name='r_role' value=" . "'{$result->role}'" . "></td>"
+						. "<td></td>"
+						. "<td align='right'>" . "<input class='css_btn_class' cellspacing='2' name='edit' type='submit' value='edit' formaction='index.php?section=teamedit' />" . "</td>"
+						. "<td align='right'>" . "<input class='css_btn_class' cellspacing='2' name='update' type='submit' value='update' formaction='index.php?section=team' />"  . "</td>";
+									
+				echo "</tr><tr $mytableclass>";
+					echo "<td width='5%'></td>"
+						. "<td width='15'%>Remarks: </td>"
+	//					. "<td colspan='3'>" . "<input type='input' id='uid2' name='r_remarks' size='100' value=" . "'{$result->remarks}'" . "></td>"
+						. "<td colspan='5'>" . "<input type='input' $mytableclass style='width:100%' id='uid2' name='r_remarks' value=" . "'{$result->remarks}'" . "></td>";
+//						. "<td colspan='5' width='80'>test2</td>";
+
+//				echo "</tr><tr>";
+//						echo "<td>" . "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
+//							. "<td>" . "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . "></td>"
+//							. "<td>" . "<input type='hidden' id='uid5' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
+//							. "<td>" . "<input class='css_btn_class' name='update' type='submit' value='update' formaction='index.php?section=team' />" . "</td>"
+//							. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' formaction='index.php?section=teamedit' />" . "</td>";
+//					echo "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . ">"
+//						. "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . ">"
+//						. "<input type='hidden' id='uid5' name='r_teamid' value=" . "'{$result->teamid}'" . ">"
+//						. "<td>" . "<input class='css_btn_class' cellspacing='2' name='update' type='submit' value='update' formaction='index.php?section=team' />"  
+//						. "<input class='css_btn_class' name='edit' type='submit' value='edit' formaction='index.php?section=teamedit' />" . "</td>";
+//					echo "<td colspan='7'>abc</td>";
+				echo "</tr>";
+				echo "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . ">";
+				echo "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . ">";
+			echo "</form>";
+			echo "</div>";
+			} // of inner while
+		echo "<br />";
+		echo "</table>";
+		} // of outer while
+
+/*
+	echo "<table border='1' width='100%'>";
+		echo "<tr>";
+			echo "<th colspan='3'>head</th>";
+		echo "</tr><tr>";
+			echo "<td width='30%' colspan='3'>test</td>";
+			echo "<td width='50%'>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+		echo "</tr><tr>";
+			echo "<td width='5%'>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+			echo "<td>test</td>";
+		echo "</tr><tr>";
+			echo "<td width='5%'>test</td>";
+			echo "<td width='15%'>test</td>";
+			echo "<td width='80%' colspan='5'>test</td>";
+		echo "</tr>";
+	echo "</table>";
+*/	
+	
+} // of "if isset team4"
 
 $mysqli->close();
 $mysqli2->close();
