@@ -361,7 +361,6 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 				}
 
 			echo "<form method='post'>";
-//				echo "<tr><th></th><th></th><th></th>";
 				echo "<tr $mytableclass>";
 					echo "<td colspan='3'>" . "<b>{$result->lastname} {$result->firstname}</b>, {$result->company}" . "</td>"
 						. "<td>" . "<input type='input' $mytableclass style='width:100%' id='uid1' name='r_role' value=" . "'{$result->role}'" . "></td>"
@@ -372,22 +371,7 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 				echo "</tr><tr $mytableclass>";
 					echo "<td width='5%'></td>"
 						. "<td width='15'%>Remarks: </td>"
-	//					. "<td colspan='3'>" . "<input type='input' id='uid2' name='r_remarks' size='100' value=" . "'{$result->remarks}'" . "></td>"
 						. "<td colspan='5'>" . "<input type='input' $mytableclass style='width:100%' id='uid2' name='r_remarks' value=" . "'{$result->remarks}'" . "></td>";
-//						. "<td colspan='5' width='80'>test2</td>";
-
-//				echo "</tr><tr>";
-//						echo "<td>" . "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
-//							. "<td>" . "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . "></td>"
-//							. "<td>" . "<input type='hidden' id='uid5' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
-//							. "<td>" . "<input class='css_btn_class' name='update' type='submit' value='update' formaction='index.php?section=team' />" . "</td>"
-//							. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' formaction='index.php?section=teamedit' />" . "</td>";
-//					echo "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . ">"
-//						. "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . ">"
-//						. "<input type='hidden' id='uid5' name='r_teamid' value=" . "'{$result->teamid}'" . ">"
-//						. "<td>" . "<input class='css_btn_class' cellspacing='2' name='update' type='submit' value='update' formaction='index.php?section=team' />"  
-//						. "<input class='css_btn_class' name='edit' type='submit' value='edit' formaction='index.php?section=teamedit' />" . "</td>";
-//					echo "<td colspan='7'>abc</td>";
 				echo "</tr>";
 				echo "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . ">";
 				echo "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . ">";
@@ -398,31 +382,6 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 		echo "</table>";
 		} // of outer while
 
-/*
-	echo "<table border='1' width='100%'>";
-		echo "<tr>";
-			echo "<th colspan='3'>head</th>";
-		echo "</tr><tr>";
-			echo "<td width='30%' colspan='3'>test</td>";
-			echo "<td width='50%'>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-		echo "</tr><tr>";
-			echo "<td width='5%'>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-			echo "<td>test</td>";
-		echo "</tr><tr>";
-			echo "<td width='5%'>test</td>";
-			echo "<td width='15%'>test</td>";
-			echo "<td width='80%' colspan='5'>test</td>";
-		echo "</tr>";
-	echo "</table>";
-*/	
 	
 } // of "if isset team4"
 
