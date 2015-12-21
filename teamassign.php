@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** teamassign.php                                (c) Wolfram Plettscher 01/2015 **
+// ** teamassign.php                                (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -22,11 +22,15 @@ if (mysqli_connect_errno()) {
 
 //-----------------------------------------------------------------------------------
 // set global variables and comments before doing the real things                 ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 $myuser = $_SESSION['usershort'];
 $myuserid = $_SESSION['userid'];
 $myprojid = $_SESSION['projid'];
 
+if (!isset ($_POST['r_groupid'])) $_POST['r_groupid'] = '';
+if (!isset ($_POST['r_role'])) $_POST['r_role'] = '';
+	
 $myteamid = $_POST['r_teamid'];
 $mygroupid = $_POST['r_groupid'];
 $myfirstname = $_POST['r_firstname'];

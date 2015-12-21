@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** travel.php                                    (c) Wolfram Plettscher 01/2015 **
+// ** travel.php                                    (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -21,21 +21,46 @@ if (mysqli_connect_errno()) {
 }
 
 //-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                                                     ---
+// react on previously pushed button to update mySQL database                     ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
 	$myuserid = $_SESSION['userid'];
 	$myusershort = $_SESSION['usershort'];
 
-	$myid = $_POST['id'];
-	$mydatestart = $_POST['date_start'];
-	$mytimestart = $_POST['time_start'];
-	$mykmstart = $_POST['km_start'];
-	$mydateend = $_POST['date_end'];
-	$mytimeend = $_POST['time_end'];
-	$mykmend = $_POST['km_end'];
-	$myroute = $_POST['route'];
-	$mypurpose = $_POST['purpose'];
+	if (!isset ($_POST['r_id'])) {
+		$_POST['r_id'] = '';
+		$_POST['r_date_start'] = '';
+		$_POST['r_time_start'] = '';
+		$_POST['r_km_start'] = '';
+		$_POST['r_date_end'] = '';
+		$_POST['r_time_end'] = '';
+		$_POST['r_km_end'] = '';
+		$_POST['r_route'] = '';
+		$_POST['r_purpose'] = '';
+	}
+	
+	if (isset ($_POST['id'])) {
+		$myid = $_POST['id'];
+		$mydatestart = $_POST['date_start'];
+		$mytimestart = $_POST['time_start'];
+		$mykmstart = $_POST['km_start'];
+		$mydateend = $_POST['date_end'];
+		$mytimeend = $_POST['time_end'];
+		$mykmend = $_POST['km_end'];
+		$myroute = $_POST['route'];
+		$mypurpose = $_POST['purpose'];
+	} else {
+		$myid = '';
+		$mydatestart = '';
+		$mytimestart = '';
+		$mykmstart = '';
+		$mydateend = '';
+		$mytimeend = '';
+		$mykmend = '';
+		$myroute = '';
+		$mypurpose = '';
+	};
 	
 if (isset($_POST['new'])) {
 	$query = $mysqli->query ("	INSERT INTO travel	(id, userid, usershort, date_start, time_start, km_start,

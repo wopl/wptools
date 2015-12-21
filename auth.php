@@ -1,11 +1,15 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** auth.php                                      (c) Wolfram Plettscher 10/2014 **
+// ** auth.php                                      (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
-session_start();
+include "inc/globalvars.inc";
+
+if (session_id() == '') {
+	session_start();
+}
 
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
@@ -13,8 +17,11 @@ $path = dirname($_SERVER['PHP_SELF']);
 // check, if user is properly logged-in
 if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
 	// no, therefore go to login-page
-//	header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
-	header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	if (defined ('HOSTEUROPE_SSLPROXY')) {
+		header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	} else {
+		header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	}
 	exit;
 }
 
@@ -22,8 +29,11 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
 if (time() - $_SESSION['TIME']	> 600) {
 	// yes, counter expired; goto login-page
     session_destroy();
-//	header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
-	header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	if (defined ('HOSTEUROPE_SSLPROXY')) {
+		header('Location: https://ssl.webpack.de/'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	} else {
+		header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
+	}
 	exit;
 }
 

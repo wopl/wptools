@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** user.php                                      (c) Wolfram Plettscher 01/2015 **
+// ** user.php                                      (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -21,15 +21,32 @@ if (mysqli_connect_errno()) {
 }
 
 //-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                                                     ---
+// react on previously pushed button to update mySQL database                     ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
-	$myuserid = $_POST['userid'];
-	$myuser = $_POST['username'];
-	$myfirstname = $_POST['vorname'];
-	$mylastname = $_POST['nachname'];
-	$myemail = $_POST['email'];
-	$myphone = $_POST['phone'];
+if (!isset ($_POST['r_userid'])) {
+	$_POST['r_userid'] = '';
+	$_POST['r_username'] = '';
+	$_POST['r_firstname'] = '';
+	$_POST['r_lastname'] = '';
+	$_POST['r_email'] = '';
+	$_POST['r_phone'] = '';
+	}
+	
+if (!isset ($_POST['userid'])) $_POST['userid'] = '';
+if (!isset ($_POST['username'])) $_POST['username'] = '';
+if (!isset ($_POST['vorname'])) $_POST['vorname'] = '';
+if (!isset ($_POST['nachname'])) $_POST['nachname'] = '';
+if (!isset ($_POST['email'])) $_POST['email'] = '';
+if (!isset ($_POST['phone'])) $_POST['phone'] = '';
+
+$myuserid = $_POST['userid'];
+$myuser = $_POST['username'];
+$myfirstname = $_POST['vorname'];
+$mylastname = $_POST['nachname'];
+$myemail = $_POST['email'];
+$myphone = $_POST['phone'];
 
 if (isset($_POST['new'])) {
 	$query = $mysqli->query ("	INSERT INTO user	(user, firstname, lastname, email, phone)

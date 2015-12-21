@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** login.php                                     (c) Wolfram Plettscher 01/2015 **
+// ** login.php                                     (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          	}
         }
 
-		header ('Location: ' . addsslproxy ('index.php?section=home'));
+		header ('Location: ' . checksslproxy ('index.php?section=home'));
         exit;
 	}
 }
@@ -123,14 +123,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <div id="cssmenu">
             <ul>
-                <li class='active'><a href='<?php //echo addsslproxy ('login.php')?>'><span>Login</span></a></li>
+				<li class='active'><a href='<?php echo checksslproxy ('login.php')?>'><span>Login</span></a></li> 
             </ul>
         </div>
             
 
         <div id="contentbody">
             <h1>Wolfram Plettscher's Project Tools</h1>
-            <form action="<?php //echo addsslproxy ('login.php')?>" method="post">
+            <form action="<?php echo checksslproxy ('login.php')?>" method="post">
                 <table>
                     <tr>
                         <td>Username: </td>
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  	</div>
         
 	<div id="footer">
-		&copy; Wolfram Plettscher 2015
+		&copy; Wolfram Plettscher 2016
     </div>
 
 </body>

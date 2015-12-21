@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** projsel.php                                   (c) Wolfram Plettscher 01/2015 **
+// ** projsel.php                                   (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -29,10 +29,14 @@ if (mysqli_connect_errno()) {
 }
 
 //-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                                                     ---
+// react on previously pushed button to update mySQL database                     ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
 	$myuser = $_SESSION['usershort'];
+
+	if (!isset ($_POST['select'])) $_POST['select'] = '';
+	if (!isset ($_POST['default'])) $_POST['default'] = '';
 
 	$myselect = $_POST['select'];
 	$mydefault = $_POST['default'];

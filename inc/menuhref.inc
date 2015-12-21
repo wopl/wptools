@@ -1,9 +1,11 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** menuhref.inc                                  (c) Wolfram Plettscher 11/2014 **
+// ** menuhref.inc                                  (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
+
+include "inc/globalvars.inc";
 
 function href ($section, $sect, $menu, $ref, $group)
 {
@@ -26,10 +28,18 @@ function href ($section, $sect, $menu, $ref, $group)
 
 function hrefsub ($menu, $ref)
 {
-	$ref = addsslproxy ($ref);
+	$ref = checksslproxy ($ref);
 		
 	// finally set href-link and menu name and display
 	echo "<a href='$ref'><span>$menu</span></a>\r\n";
+}
+
+function checksslproxy ($ref)
+{
+	if (defined ('HOSTEUROPE_SSLPROXY')) {
+		$ref = addsslproxy ($ref);
+	}
+	return $ref;
 }
 
 function addsslproxy ($ref)

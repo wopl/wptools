@@ -66,7 +66,7 @@ if (isset ($_GET["section"]))
         </div>
 
         <div id="footer">
-            &copy; Wolfram Plettscher 2015
+            &copy; Wolfram Plettscher 2016
         </div>
 
     </body>
