@@ -1,12 +1,13 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** index.php                                     (c) Wolfram Plettscher 01/2015 **
+// ** index.php                                     (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
 // Display page only, if authenticated, otherwise jump to login page
 include ('auth.php');
+//error_reporting( error_reporting() & ~E_NOTICE );
 
 // effectively pages are loaded by section; index.php is a wrapper only
 if (isset ($_GET["section"]))
@@ -43,11 +44,16 @@ if (isset ($_GET["section"]))
         <div id="wrapper">
 
             <div id="header">
-            	<table width="980px"><tr>
+				<?php
+					$timestamp = time();
+					$datum = "Date: " . date ("d.m.Y H:i", $timestamp);
+				?>	
+
+            	<table width="1220px"><tr>
 					<td align="left" valign="bottom"><b>Wolfram Plettscher's Project Tools</b></td>
 					<td align="right" valign="bottom"><b><?php echo $_SESSION['welcome']; ?></b></td>
 				</tr><tr>
-                	<td></td>
+                    <td align="left" valign="bottom"><b><?php echo $datum; ?></b></td> 
                     <td align="right" valign="bottom"><b><?php echo $_SESSION['project']; ?></b></td>
 				</tr></table>
             </div>

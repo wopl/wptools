@@ -1,0 +1,17 @@
+# **********************************************************************************
+# **                                                                              **
+# ** .htaccess                                     (c) Wolfram Plettscher 12/2015 **
+# **                                                                              **
+# **********************************************************************************
+
+# Force all HTTP requests to be replaced by HTTPS
+
+RewriteEngine On
+
+# For HostEurope Web Service we have to redirect to ssl.web.pack.de
+# RewriteCond %{REMOTE_ADDR} !^10\.30\.7\.1(?:37|38|39|40)$
+# RewriteRule ^ https://ssl.webpack.de/%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Generic HTTP to HTTPS replace
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
