@@ -33,15 +33,15 @@ echo "<ul>";
 	
 	// Menu "Tasks" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "task2") || ($section == "task2")){
+	if (($section == "task1") || ($section == "task2")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}
 	echo $li;
 	hrefsub ("Tasks", "#");
 		echo "<ul>";		
-			href ($section, "task2", "Task1", "index.php?section=task2", "all");
-			href ($section, "task2", "Task2", "index.php?section=task2", "all");
+			href ($section, "tasks1", "Manage Tasks", "index.php?section=tasks1", "all");
+//			href ($section, "task2", "Task2", "index.php?section=task2", "all");
 		echo "</ul>";
 	echo "</li>";
 
