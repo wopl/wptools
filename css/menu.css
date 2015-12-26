@@ -1,4 +1,28 @@
 @charset "UTF-8";
+@media print
+{
+#cssmenu {
+/*  border: none;
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+  font-family: verdana, geneva, arial, helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #8e8e8e;
+  width: auto; */
+  display: none;
+}
+#cssmenu > ul {
+/*  margin-top: 6px !important; */
+  display: none;
+}
+/*		display: none;*/
+}
+
+
+@media screen
+{
 #cssmenu {
   border: none;
   border: 0px;
@@ -107,4 +131,5 @@
 }
 #cssmenu .active > a:hover {
   color: white;
+}
 }

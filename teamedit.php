@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** teamedit.php                                  (c) Wolfram Plettscher 01/2015 **
+// ** teamedit.php                                  (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -23,23 +23,73 @@ if (mysqli_connect_errno()) {
 $_SESSION['kicker'] = "Edit fields. Then update database by pressing 'save' !";
 
 //-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                                                     ---
+// react on previously pushed button to update mySQL database                     ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
 $myuser = $_SESSION['usershort'];
 $myuserid = $_SESSION['userid'];
 $myprojid = $_SESSION['projid'];
 
-$myteamid = $_POST['r_teamid'];
-$myfirstname = $_POST['r_firstname'];
-$mylastname = $_POST['r_lastname'];
-$mycompany = $_POST['r_company'];
-$mylocation = $_POST['r_location'];
-$mydept = $_POST['r_dept'];
-$myemail = $_POST['r_email'];
-$myphone = $_POST['r_phone'];
-$myposition = $_POST['r_position'];
-$myremarks = $_POST['r_remarks'];
+if (!isset ($_POST['r_teamid'])) {
+	$_POST['r_teamid'] = '';
+	$_POST['r_firstname'] = '';
+	$_POST['r_lastname'] = '';
+	$_POST['r_company'] = '';
+	$_POST['r_location'] = '';
+	$_POST['r_dept'] = '';
+	$_POST['r_email'] = '';
+	$_POST['r_phone'] = '';
+	$_POST['r_position'] = '';
+	$_POST['r_remarks'] = '';
+	}
+
+if (isset ($_POST['r_teamid']))	$myteamid = $_POST['r_teamid']; else $myteamid = '';
+if (isset ($_POST['r_firstname']))	$myfirstname = $_POST['r_firstname']; else $myfirstname = '';
+if (isset ($_POST['r_lastname']))	$mylastname = $_POST['r_lastname']; else $mylastname = '';
+if (isset ($_POST['r_company']))	$mycompany = $_POST['r_company']; else $mycompany = '';
+if (isset ($_POST['r_location']))	$mylocation = $_POST['r_location']; else $mylocation = '';
+if (isset ($_POST['r_dept']))	$mydept = $_POST['r_dept']; else $mydept = '';
+if (isset ($_POST['r_email']))	$myemail = $_POST['r_email']; else $myemail = '';
+if (isset ($_POST['r_phone']))	$myphone = $_POST['r_phone']; else $myphone = '';
+if (isset ($_POST['r_position']))	$myposition = $_POST['r_position']; else $myposition = '';
+if (isset ($_POST['r_remarks']))	$myremarks = $_POST['r_remarks']; else $myremarks = '';
+
+//	if (isset ($_POST['r_teamid'])) {
+//		$myteamid = $_POST['r_teamid'];
+//		$myfirstname = $_POST['r_firstname'];
+//		$mylastname = $_POST['r_lastname'];
+//		$mycompany = $_POST['r_company'];
+//		$mylocation = $_POST['r_location'];
+//		$mydept = $_POST['r_dept'];
+//		$myemail = $_POST['r_email'];
+//		$myphone = $_POST['r_phone'];
+//		$myposition = $_POST['r_position'];
+//		$myremarks = $_POST['r_remarks'];
+//	} else {
+//		$myteamid = '';
+//		$myfirstname = '';
+//		$mylastname = '';
+//		$mycompany = '';
+//		$mylocation = '';
+//		$mydept = '';
+//		$myemail = '';
+//		$myphone = '';
+//		$myposition = '';
+//		$myremarks = '';
+//	};
+
+
+//$myteamid = $_POST['r_teamid'];
+//$myfirstname = $_POST['r_firstname'];
+//$mylastname = $_POST['r_lastname'];
+//$mycompany = $_POST['r_company'];
+//$mylocation = $_POST['r_location'];
+//$mydept = $_POST['r_dept'];
+//$myemail = $_POST['r_email'];
+//$myphone = $_POST['r_phone'];
+//$myposition = $_POST['r_position'];
+//$myremarks = $_POST['r_remarks'];
 
 if (isset($_POST['edit'])) {
 	// this has been triggered by teamlist page; show all data for editing

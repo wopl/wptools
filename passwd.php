@@ -21,12 +21,17 @@ if (mysqli_connect_errno()) {
 }
 
 //-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                                                     ---
+// react on previously pushed button to update mySQL database                     ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
 	$myuser = $_SESSION['usershort'];
 	$myuserid = $_SESSION['userid'];
 
+	if (!isset ($_POST['oldpw'])) $_POST['oldpw'] = '';
+	if (!isset ($_POST['newpw1'])) $_POST['newpw1'] = '';
+	if (!isset ($_POST['newpw2'])) $_POST['newpw2'] = '';
+	
 	$myoldpw = $_POST['oldpw'];
 	$mynewpw1 = $_POST['newpw1'];
 	$mynewpw2 = $_POST['newpw2'];

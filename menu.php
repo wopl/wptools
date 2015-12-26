@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** menu.php                                      (c) Wolfram Plettscher 01/2015 **
+// ** menu.php                                      (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -18,30 +18,17 @@ echo "<ul>";
 	// Menu "Home"
 	href ($section, "home", "Home", "index.php?section=home", "all");
 
-	// Menu "Time" with submenus
-	$li = "<li class='has-sub'>";
-	if (($section == "task") || ($section == "travel")){
-		// Highlight Top-Menu
-		$li = "<li class='active has-sub'>";
-	}
-	echo $li;
-	hrefsub ("Time", "#");
-		echo "<ul>";		
-			href ($section, "travel", "Travel", "index.php?section=travel", "all");
-		echo "</ul>";
-	echo "</li>";
-	
 	// Menu "Tasks" with submenus
 	$li = "<li class='has-sub'>";
-	if (($section == "task2") || ($section == "task2")){
+	if (($section == "task1") || ($section == "task2")){
 		// Highlight Top-Menu
 		$li = "<li class='active has-sub'>";
 	}
 	echo $li;
 	hrefsub ("Tasks", "#");
 		echo "<ul>";		
-			href ($section, "task2", "Task1", "index.php?section=task2", "all");
-			href ($section, "task2", "Task2", "index.php?section=task2", "all");
+			href ($section, "tasks1", "Manage Tasks", "index.php?section=tasks1", "all");
+//			href ($section, "task2", "Task2", "index.php?section=task2", "all");
 		echo "</ul>";
 	echo "</li>";
 
@@ -59,6 +46,19 @@ echo "<ul>";
 		echo "</ul>";
 	echo "</li>";
 
+	// Menu "Time" with submenus
+	$li = "<li class='has-sub'>";
+	if (($section == "task") || ($section == "travel")){
+		// Highlight Top-Menu
+		$li = "<li class='active has-sub'>";
+	}
+	echo $li;
+	hrefsub ("Time", "#");
+		echo "<ul>";		
+			href ($section, "travel", "Travel", "index.php?section=travel", "all");
+		echo "</ul>";
+	echo "</li>";
+	
 	// Menu "Admin" with submenus
 	$li = "<li class='has-sub'>";
 	if (($section == "passwd") ||

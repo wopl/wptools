@@ -4,24 +4,27 @@
 /* ***                                                                         *** */
 /* ******************************************************************************* */
 
+/* changed all width 980->1220 960->1200 */
+
 @charset "utf-8";
 /* CSS Document */
 
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 12px;
+/*	width: 1220px; */
 }
 
 #wrapper {
 	margin-left: auto;
 	margin-right: auto;
 /*	background-color: #888888; */ 
-	width: 980px;
+	width: 1220px;
 /*	height: 500px; */
 }
 
 #header {
-	width: 960px%;
+	width: 1220px;
 	height: 40px;
 /*	background-color: #CFCFCF; */
 /*	margin-bottom: 10px; */
@@ -41,7 +44,7 @@ body {
 }
 
 #contentbody {
-	width: 960px;
+	width: 1220px;
 /*	height: 500px; */
 /*
 	margin-bottom: 10px;
@@ -50,7 +53,7 @@ body {
 */
   font-size: 12px;
 /*  line-height: 27px; */
-  padding: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 0px;
   position: relative;
 /*  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); */
 }
@@ -58,7 +61,7 @@ body {
 #kicker {
 	margin-left: auto;
 	margin-right: auto;
-	width: 960px;
+	width: 1220px;
 	height: 10px;
 /*
     margin-top: 2px;
@@ -67,7 +70,7 @@ body {
 	text-align: left;
 	font-size: 12;
 	font-weight:bold;
-    padding: 0px 0px 5px 5px;
+    padding: 0px 0px 5px 0px;
 	background-color: #e1e2e6;
 /*	color: #516eb1; */
 	color: #a80329;
@@ -76,7 +79,7 @@ body {
 #footer {
 	margin-left: auto;
 	margin-right: auto;
-	width: 960px;
+	width: 1220px;
 	height: 10px;
     margin-top: 10px;
 	margin-bottom: 10px;
@@ -123,6 +126,7 @@ input {
   box-shadow: 0 -4px 0 #516eb1, 0 -5px 0 #a6afd6, 0 -6px 0 #516eb1;
   color: #ffffff;
 	text-align: left;
+	vertical-align: top;
 	font-weight:bold;
 	font-size: 12px;
 }
@@ -130,6 +134,7 @@ input {
 .sqltableeven {
 /*	margin-right: 10px; */
 	text-align: left;
+	vertical-align: top;
 	font-size: 12px;
 	background-color: #ffffff;
 	color: black;
@@ -138,6 +143,7 @@ input {
 .sqltableodd {
 /*	margin-right: 10px; */
 	text-align: left;
+	vertical-align: top;
 	font-size: 12px;
 	background-color: #e1e2e6;
 	color: black;

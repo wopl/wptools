@@ -1,12 +1,16 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** credentials.inc                               (c) Wolfram Plettscher 12/2015 **
+// ** globalvars.inc                                (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
-$username="wopl";
-$password="wopl";
-$database="wptools";
-$host="localhost";
+// define global variables for overall configuration etc.
+if (!defined ('GLOBALVARS')) {
+	define ('GLOBALVARS', 'globalvars');
+
+//	define ('HOSTEUROPE_SSLPROXY', '1');
+
+	}
+
 ?>

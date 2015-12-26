@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** projgroups.php                                (c) Wolfram Plettscher 01/2015 **
+// ** projgroups.php                                (c) Wolfram Plettscher 12/2015 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -22,6 +22,7 @@ if (mysqli_connect_errno()) {
 
 //-----------------------------------------------------------------------------------
 // set global variables and comments before doing the real things                 ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
 $myprojid = $_SESSION['projid'];
@@ -29,13 +30,21 @@ $myprojid = $_SESSION['projid'];
 echo "<h3> Project-Id: $myprojid</h3>";
 $_SESSION['kicker'] = "Deleting a group will result in all roles and remarks for associated users to be discarded. Be careful!";
 
-//-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                     ---
-//-----------------------------------------------------------------------------------
+if (!isset ($_POST['groupid'])) $_POST['groupid'] = '';
+if (!isset ($_POST['prio'])) $_POST['prio'] = '';
+if (!isset ($_POST['groupname'])) $_POST['groupname'] = '';
+
+if (!isset ($_POST['r_groupid'])) $_POST['r_groupid'] = '';
+if (!isset ($_POST['r_prio'])) $_POST['r_prio'] = '';
+if (!isset ($_POST['r_name'])) $_POST['r_name'] = '';
 
 $mygroupid = $_POST['groupid'];
 $myprio = $_POST['prio'];
 $myname = $_POST['groupname'];
+
+//-----------------------------------------------------------------------------------
+// react on previously pushed button to update mySQL database                     ---
+//-----------------------------------------------------------------------------------
 
 if (isset($_POST['new'])) {
 	$query = $mysqli->query ("	INSERT INTO projgroup(projid, prio, name)
