@@ -29,14 +29,18 @@ if (mysqli_connect_errno()) {
 }
 
 //-----------------------------------------------------------------------------------
+// set global variables and comments before doing the real things                 ---
+// set values to '', if not previously set                                        ---
+//-----------------------------------------------------------------------------------
+
+$myprojid = $_SESSION['projid'];
+
+//-----------------------------------------------------------------------------------
 // react on previously pushed button to update mySQL database                                                     ---
 //-----------------------------------------------------------------------------------
 
-// $myentityid = $_POST['r_entityid'];
-
 if (isset($_POST['select'])) {
 	$mytaskid = $_POST['r_id'];
-//	echo "Taskid: $mytaskid";
 }
 
 if (isset($_POST['rem_update'])) {
@@ -56,17 +60,13 @@ if (isset($_POST['rem_update'])) {
 		 remarks = '$myremarks'
 		 WHERE id = '$mytask2id'");
 	
-//	$query = $mysqli->query ("UPDATE task2 SET
-//		 task2_date = " . (is_null($mydate) ? 'NULL' : '$mydate') . ",
-//		 remarks = '$myremarks'
-//		 WHERE id = '$mytask2id'");
 }
 
 if (isset($_POST['new_rem'])) {
 	$mytaskid = $_POST['r_taskid'];
 
-	$query = $mysqli->query ("	INSERT INTO task2	(task1_id, task2_date, remarks)
-								VALUES				('$mytaskid', NOW(), 'new')");
+	$query = $mysqli->query ("	INSERT INTO task2	(task1_id, projid, task2_date, remarks)
+								VALUES				('$mytaskid', '$myprojid', NOW(), 'new')");
 }
 
 if (isset($_POST['del_rem'])) {
@@ -75,6 +75,7 @@ if (isset($_POST['del_rem'])) {
 	$query = $mysqli->query ("DELETE FROM task2
 							  WHERE task1_id='$mytaskid'
 							  AND task2_date is NULL
+							  AND projid = '$myprojid'
 							  AND remarks = ''");
 }
 
@@ -82,13 +83,14 @@ if (isset($_POST['del_rem'])) {
 if (isset($_POST['new'])) {
 	$mytaskid = $_POST['r_taskid'];
 
-	$query = $mysqli->query ("	INSERT INTO task1	(task_date, task_type, topic)
-								VALUES				(NOW(), 'generic', 'new')");
+	$query = $mysqli->query ("	INSERT INTO task1	(projid, task_date, task_type, topic)
+								VALUES				('$myprojid', NOW(), 'generic', 'new')");
 
 	// query id of latest inserted record
 	$query = $mysqli->query ("SELECT id
 							 FROM task1
 							 WHERE topic = 'new'
+							 AND projid = '$myprojid'
 							 ORDER BY id DESC");
 	$result = $query->fetch_object();
 	$mytaskid = $result->id;
@@ -138,7 +140,9 @@ if (isset($_POST['change'])) {
 $query = $mysqli->query ("SELECT task_date, task_type, category, subcat, resolved_date, task_active,
 							severity, status, topic, owner, duedate
 						 FROM task1
-						 WHERE id = '$mytaskid'");
+						 WHERE id = '$mytaskid'
+						 AND projid = '$myprojid'
+						 ");
 $result = $query->fetch_object();
 
 $mytaskdate = $result->task_date;

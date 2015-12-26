@@ -30,11 +30,14 @@ if (mysqli_connect_errno()) {
 
 //-----------------------------------------------------------------------------------
 // set global variables and comments before doing the real things                 ---
+// set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
-// $mycountryid = $_POST['r_countryid'];
+$myprojid = $_SESSION['projid'];
 
 $_SESSION['kicker'] = "";
+
+if (!isset ($_POST['dcheck'])) $_POST['dcheck'] = '';
 
 //-----------------------------------------------------------------------------------
 // react on previously pushed button to update mySQL database                                                     ---
@@ -106,7 +109,7 @@ if (isset($_POST['confirm'])) {
  		echo "<td><b>details: </b></td>";
 		echo "<td><input type='checkbox' id='dcheck' name='dcheck' $mydetails/></td>";
 		echo "<td><input type='hidden' id='uid1' name='r_issue' value='$myissueselect' /></td>";
-		echo "<td><input class='css_btn_class' name='confirm' type='submit' value='confirm' formaction='index.php?section=tasks1_gen' /></td>";
+		echo "<td><input class='css_btn_class' name='confirm' type='submit' value='confirm' formaction='index.php?section=tasks1' /></td>";
 		echo "</tr>";
 
 	echo "</table>";
@@ -123,14 +126,14 @@ echo "</form>";
 		$query = $mysqli->query ("SELECT id, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
 								  FROM task1
 								  WHERE task_active = '1'
-								  AND task_type != 'IGSA'
+								  AND projid = '$myprojid'
 								  ORDER BY task_date DESC, id DESC");
 		}
 	elseif ($myissueselect == "all_issues+")
 		{
 		$query = $mysqli->query ("SELECT id, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
 								  FROM task1
-								  WHERE task_type != 'IGSA'
+								  WHERE projid = '$myprojid'
 								  ORDER BY task_date DESC, id DESC");
 		}
 	elseif ($myissueselect == "not_assigned")
@@ -139,6 +142,7 @@ echo "</form>";
 								  FROM task1
 								  WHERE (task_type IS NULL OR task_type = '')
 								  AND task_active = '1'
+								  AND projid = '$myprojid'
 								  ORDER BY task_date DESC, id DESC");
 		}
 	else
@@ -147,6 +151,7 @@ echo "</form>";
 								  FROM task1
 								  WHERE task_type = '$myissueselect'
 								  AND task_active = '1'
+								  AND projid = '$myprojid'
 								  ORDER BY task_date DESC, id DESC");
 		}
 

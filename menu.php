@@ -18,19 +18,6 @@ echo "<ul>";
 	// Menu "Home"
 	href ($section, "home", "Home", "index.php?section=home", "all");
 
-	// Menu "Time" with submenus
-	$li = "<li class='has-sub'>";
-	if (($section == "task") || ($section == "travel")){
-		// Highlight Top-Menu
-		$li = "<li class='active has-sub'>";
-	}
-	echo $li;
-	hrefsub ("Time", "#");
-		echo "<ul>";		
-			href ($section, "travel", "Travel", "index.php?section=travel", "all");
-		echo "</ul>";
-	echo "</li>";
-	
 	// Menu "Tasks" with submenus
 	$li = "<li class='has-sub'>";
 	if (($section == "task1") || ($section == "task2")){
@@ -59,6 +46,19 @@ echo "<ul>";
 		echo "</ul>";
 	echo "</li>";
 
+	// Menu "Time" with submenus
+	$li = "<li class='has-sub'>";
+	if (($section == "task") || ($section == "travel")){
+		// Highlight Top-Menu
+		$li = "<li class='active has-sub'>";
+	}
+	echo $li;
+	hrefsub ("Time", "#");
+		echo "<ul>";		
+			href ($section, "travel", "Travel", "index.php?section=travel", "all");
+		echo "</ul>";
+	echo "</li>";
+	
 	// Menu "Admin" with submenus
 	$li = "<li class='has-sub'>";
 	if (($section == "passwd") ||
