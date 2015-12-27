@@ -5,8 +5,8 @@
 // **                                                                              **
 // **********************************************************************************
 
-$username="wopl";
-$password="wopl";
+$username="wptoolsdbadmin";
+$password="1L5MT6u4";
 $database="wptools";
 $host="localhost";
 ?>
