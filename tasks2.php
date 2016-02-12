@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** tasks2.php                                    (c) Wolfram Plettscher 12/2015 **
+// ** tasks2.php                                    (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -33,10 +33,11 @@ if (mysqli_connect_errno()) {
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
+$myacc = $_SESSION['account'];
 $myprojid = $_SESSION['projid'];
 
 //-----------------------------------------------------------------------------------
-// react on previously pushed button to update mySQL database                                                     ---
+// react on previously pushed button to update mySQL database                     ---
 //-----------------------------------------------------------------------------------
 
 if (isset($_POST['select'])) {
@@ -53,52 +54,54 @@ if (isset($_POST['rem_update'])) {
 		$query = $mysqli->query ("UPDATE task2 SET
 		 task2_date = NULL,
 		 remarks = '$myremarks'
-		 WHERE id = '$mytask2id'");
+		 WHERE task2_uuid = '$mytask2id'");
 	else
 		$query = $mysqli->query ("UPDATE task2 SET
 		 task2_date = '$mydate',
 		 remarks = '$myremarks'
-		 WHERE id = '$mytask2id'");
+		 WHERE task2_uuid = '$mytask2id'");
 	
 }
 
 if (isset($_POST['new_rem'])) {
-	$mytaskid = $_POST['r_taskid'];
+	$mytaskid = $_POST['r_task1_uuid'];
 
-	$query = $mysqli->query ("	INSERT INTO task2	(task1_id, projid, task2_date, remarks)
-								VALUES				('$mytaskid', '$myprojid', NOW(), 'new')");
+	$query = $mysqli->query ("	INSERT INTO task2	(acc_uuid, task1_uuid, task2_uuid, proj_uuid, task2_date, remarks)
+								VALUES				('$myacc', '$mytaskid', UUID(), '$myprojid', NOW(), 'new')");
 }
 
 if (isset($_POST['del_rem'])) {
-	$mytaskid = $_POST['r_taskid'];
+	$mytaskid = $_POST['r_task1_uuid'];
 
 	$query = $mysqli->query ("DELETE FROM task2
-							  WHERE task1_id='$mytaskid'
+							  WHERE task1_uuid='$mytaskid'
 							  AND task2_date is NULL
-							  AND projid = '$myprojid'
+							  AND proj_uuid = '$myprojid'
+							  AND acc_uuid = '$myacc'
 							  AND remarks = ''");
 }
 
 // create new issue on task1 with type = ''
 if (isset($_POST['new'])) {
-	$mytaskid = $_POST['r_taskid'];
+	$mytaskid = $_POST['r_task1_uuid'];
 
-	$query = $mysqli->query ("	INSERT INTO task1	(projid, task_date, task_type, topic)
-								VALUES				('$myprojid', NOW(), 'generic', 'new')");
+	$query = $mysqli->query ("	INSERT INTO task1	(acc_uuid, proj_uuid, task1_uuid, task_date, task_type, topic)
+								VALUES				('$myacc', '$myprojid', UUID(), NOW(), 'generic', 'new')");
 
 	// query id of latest inserted record
-	$query = $mysqli->query ("SELECT id
+	$query = $mysqli->query ("SELECT task1_uuid
 							 FROM task1
 							 WHERE topic = 'new'
-							 AND projid = '$myprojid'
-							 ORDER BY id DESC");
+							 AND proj_uuid = '$myprojid'
+							 AND acc_uuid = '$myacc'
+							 ORDER BY task_date DESC");
 	$result = $query->fetch_object();
-	$mytaskid = $result->id;
+	$mytaskid = $result->task1_uuid;
 }
 
 // update task1 from input fields
 if (isset($_POST['change'])) {
-	$mytaskid = $_POST['r_taskid'];
+	$mytaskid = $_POST['r_task1_uuid'];
 
 	$mysqlupdate = "UPDATE task1 SET";
 	$mysqlupdate .= " task_date = '" . $_POST['taskdate'] . "',";
@@ -127,7 +130,7 @@ if (isset($_POST['change'])) {
 
 //	$mysqlupdate .= " duedate = '" . $_POST['duedate'] . "',";
 	$mysqlupdate .= " topic = '" . $_POST['topic'] . "'";
-	$mysqlupdate .= " WHERE id = '$mytaskid';";
+	$mysqlupdate .= " WHERE task1_uuid = '$mytaskid' AND acc_uuid = '$myacc';";
 	
 //	echo "$mysqlupdate";
 	$query = $mysqli->query ($mysqlupdate);
@@ -140,8 +143,9 @@ if (isset($_POST['change'])) {
 $query = $mysqli->query ("SELECT task_date, task_type, category, subcat, resolved_date, task_active,
 							severity, status, topic, owner, duedate
 						 FROM task1
-						 WHERE id = '$mytaskid'
-						 AND projid = '$myprojid'
+						 WHERE task1_uuid = '$mytaskid'
+						 AND proj_uuid = '$myprojid'
+						 AND acc_uuid = '$myacc'
 						 ");
 $result = $query->fetch_object();
 
@@ -221,7 +225,7 @@ $myduedate = $result->duedate;
         </tr><tr>
 	       	<td>Topic: </td>
         	<td colspan='9'><input type="text" name="topic" style='width:100%' value="<?php echo $mytopic; ?>" maxlength="255" tabindex="10"/></td>
-			<td><input type="hidden" id="uid1" name="r_taskid" value="<?php echo $mytaskid; ?>"></td>
+			<td><input type="hidden" id="uid1" name="r_task1_uuid" value="<?php echo $mytaskid; ?>"></td>
         </tr>
     </table>
 	<br />
@@ -242,10 +246,12 @@ $myduedate = $result->duedate;
 //-----------------------------------------------------------------------------------
 // show Remarks (tasks2 - table)                                                   ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT id, task2_date, remarks
+$query = $mysqli->query ("SELECT task2_uuid, task2_date, remarks
 						  FROM task2
-						  WHERE task1_id = '$mytaskid'
-						  ORDER BY task2_date DESC, id DESC");
+						  WHERE task1_uuid = '$mytaskid'
+						  AND proj_uuid = '$myprojid'
+						  AND acc_uuid = '$myacc'
+						  ORDER BY task2_date DESC");
 
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' width='100%'>\n";
 $sqltable_even = false;
@@ -281,7 +287,7 @@ while ($result = $query->fetch_object())
     echo "<td><input type='date' $mytableclass name='r_task2date' value=" . "'{$result->task2_date}'" . "/></td>"
     		. "<td><input type='text' $mytableclass style='width:100%' name='r_task2rem' value=" . "'{$result->remarks}'" . "/></td>"
 			. "<td>" . "<input type='hidden' id='uid1' name='r_task1id' value=" . "'{$mytaskid}'" . "></td>"
-			. "<td>" . "<input type='hidden' id='uid2' name='r_task2id' value=" . "'{$result->id}'" . "></td>"
+			. "<td>" . "<input type='hidden' id='uid2' name='r_task2id' value=" . "'{$result->task2_uuid}'" . "></td>"
 			. "<td>" . "<input class='css_btn_class' name='rem_update' type='submit' value='update' formaction='index.php?section=tasks2'/>" . "</td>"
 		. "</form>"
 		. "</tr>";

@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** passwd.php                                    (c) Wolfram Plettscher 01/2015 **
+// ** passwd.php                                    (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -46,16 +46,23 @@ if (isset($_POST['change'])) {
 		// select users password from db
 		$query = $mysqli->query ("SELECT password
 								  FROM user
-								  WHERE id = '$myuserid'");
+								  WHERE user_uuid = '$myuserid'");
 		if ($result = $query->fetch_object()) {
-			$mydbmd5 = $result->password;
-			$mymd5 = md5($myoldpw);
-			if ($mydbmd5 == $mymd5) {
+//			$mydbmd5 = $result->password;
+//			$mymd5 = md5($myoldpw);
+			$dbpw_hash = $result->password;
+			$oldpw_hash = md5($myoldpw);
+//			if ($mydbmd5 == $mymd5) {
+			if ($dbpw_hash == $oldpw_hash) {
 				// Update password in database
-				$mynewmd5 = md5($mynewpw1);
+//				$mynewmd5 = md5($mynewpw1);
+//				$query = $mysqli->query ("UPDATE user SET
+//					 password = '$mynewmd5'
+//					 WHERE id = '$myuserid'");
+				$newpw_hash = md5($mynewpw1);
 				$query = $mysqli->query ("UPDATE user SET
-					 password = '$mynewmd5'
-					 WHERE id = '$myuserid'");
+					 password = '$newpw_hash'
+					 WHERE user_uuid = '$myuserid'");
 				$_SESSION['kicker'] = "Password changed successfully. Please immediate log out and login again!";
 			} else {
 				$_SESSION['kicker'] = "old password is not correct; plese try again!";

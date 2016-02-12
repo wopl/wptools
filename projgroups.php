@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** projgroups.php                                (c) Wolfram Plettscher 12/2015 **
+// ** projgroups.php                                (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -25,6 +25,7 @@ if (mysqli_connect_errno()) {
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
+$myacc = $_SESSION['account'];
 $myprojid = $_SESSION['projid'];
 
 echo "<h3> Project-Id: $myprojid</h3>";
@@ -47,32 +48,33 @@ $myname = $_POST['groupname'];
 //-----------------------------------------------------------------------------------
 
 if (isset($_POST['new'])) {
-	$query = $mysqli->query ("	INSERT INTO projgroup(projid, prio, name)
-								VALUES				 ('$myprojid', '$myprio', '$myname')");
+	$query = $mysqli->query ("	INSERT INTO projgroup(acc_uuid, proj_uuid, projgroup_uuid, prio, name)
+								VALUES				 ('$myacc', '$myprojid', UUID(), '$myprio', '$myname')");
 
 } elseif (isset($_POST['delete'])) {
-	$query = $mysqli->query ("DELETE FROM projgroup WHERE groupid='$mygroupid'");
+	$query = $mysqli->query ("DELETE FROM projgroup WHERE projgroup_uuid='$mygroupid'");
 
 } elseif (isset($_POST['change'])) {
 	$query = $mysqli->query ("UPDATE projgroup SET
 		 prio='$myprio',
 		 name='$myname'
-		 WHERE groupid='$mygroupid'");
+		 WHERE projgroup_uuid='$mygroupid'");
 } 
 
 //-----------------------------------------------------------------------------------
 // show project-groups-table                                                      ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT groupid, prio, name FROM projgroup
-						  WHERE projid = '$myprojid'
+$query = $mysqli->query ("SELECT projgroup_uuid, prio, name FROM projgroup
+						  WHERE proj_uuid = '$myprojid'
+						  AND acc_uuid = '$myacc'
 						  ORDER BY prio ASC");
 
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
 
 echo "<tr>
-	<th> GroupID </th>
 	<th> Priority </th>
 	<th> Groupname </th>
+	<th> GroupID </th>
 	<th></th>
 	<th></th>
 	<th></th>
@@ -81,13 +83,14 @@ echo "<tr>
 
 while ($result = $query->fetch_object())
 	{
-	echo "<tr><td>" . "{$result->groupid}" . "</td>"
+	echo "<tr>"
 		. "<td>" . "{$result->prio}" . "</td>"
 		. "<td>" . "{$result->name}" . "</td>"
+		. "<td>" . "{$result->projgroup_uuid}" . "</td>"
 		. "<form action='index.php?section=projgroups' method='post'>" 
-			. "<td>" . "<input type='hidden' id='uid1' name='r_groupid' value=" . "'{$result->groupid}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid2' name='r_prio' value=" . "'{$result->prio}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid3' name='r_name' value=" . "'{$result->name}'" . "></td>"
+			. "<td>" . "<input type='hidden' id='uid1' name='r_groupid' value=" . "'{$result->projgroup_uuid}'" . "></td>"
 			. "<td>" . "<input class='css_btn_class' type='submit' value='edit' />" . "</td>"
 		. "</form>"
 		. "</tr>";

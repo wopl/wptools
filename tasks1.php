@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** tasks1                                        (c) Wolfram Plettscher 12/2015 **
+// ** tasks1                                        (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -33,6 +33,7 @@ if (mysqli_connect_errno()) {
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
+$myacc = $_SESSION['account'];
 $myprojid = $_SESSION['projid'];
 
 $_SESSION['kicker'] = "";
@@ -123,36 +124,39 @@ echo "</form>";
 // Depending on issue-type, we will show subsets of the issues
 	if ($myissueselect == "" || $myissueselect == "all_issues")
 		{
-		$query = $mysqli->query ("SELECT id, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
+		$query = $mysqli->query ("SELECT task1_uuid, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
 								  FROM task1
 								  WHERE task_active = '1'
-								  AND projid = '$myprojid'
-								  ORDER BY task_date DESC, id DESC");
+								  AND proj_uuid = '$myprojid'
+								  AND acc_uuid = '$myacc'
+								  ORDER BY task_date DESC, task_time DESC");
 		}
 	elseif ($myissueselect == "all_issues+")
 		{
-		$query = $mysqli->query ("SELECT id, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
+		$query = $mysqli->query ("SELECT task1_uuid, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
 								  FROM task1
-								  WHERE projid = '$myprojid'
-								  ORDER BY task_date DESC, id DESC");
+								  WHERE proj_uuid = '$myprojid'
+								  AND   acc_uuid = '$myacc'
+								  ORDER BY task_date DESC, task_time DESC");
 		}
 	elseif ($myissueselect == "not_assigned")
 		{
-		$query = $mysqli->query ("SELECT id, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
+		$query = $mysqli->query ("SELECT task1_uuid, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
 								  FROM task1
 								  WHERE (task_type IS NULL OR task_type = '')
 								  AND task_active = '1'
-								  AND projid = '$myprojid'
-								  ORDER BY task_date DESC, id DESC");
+								  AND proj_uuid = '$myprojid'
+								  AND acc_uuid = '$myacc'
+								  ORDER BY task_date DESC, task_time DESC");
 		}
 	else
 		{
-		$query = $mysqli->query ("SELECT id, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
+		$query = $mysqli->query ("SELECT task1_uuid, task_date, task_type, category, subcat, severity, status, topic, duedate, owner
 								  FROM task1
 								  WHERE task_type = '$myissueselect'
 								  AND task_active = '1'
-								  AND projid = '$myprojid'
-								  ORDER BY task_date DESC, id DESC");
+								  AND proj_uuid = '$myprojid'
+								  ORDER BY task_date DESC, task_time DESC");
 		}
 
 echo "<table width='100%' class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
@@ -175,7 +179,7 @@ echo "<tr>
 while ($result = $query->fetch_object())
 	{
 	echo "<tr>";
-	echo "<td>" . "{$result->id}" . "</td>";
+	echo "<td>" . "{$result->task1_uuid}" . "</td>";
 	echo "<td><b>" . "{$result->task_date}" . "</b></td>";
 	echo "<td>" . "{$result->task_type}" . "</td>";
 
@@ -209,11 +213,11 @@ while ($result = $query->fetch_object())
 	$mytopic = "<b>" . $result->topic . "</b>";
 	if ($mydetails != "")
 		{
-		$mytaskid = $result->id;
-		$query2 = $mysqli2->query ("SELECT id, task2_date, remarks
+		$mytaskid = $result->task1_uuid;
+		$query2 = $mysqli2->query ("SELECT task2_uuid, task2_date, remarks
 								  FROM task2
-								  WHERE task1_id = '$mytaskid'
-								  ORDER BY task2_date DESC, id DESC");
+								  WHERE task1_uuid = '$mytaskid'
+								  ORDER BY task2_date DESC, task2_time DESC");
 		while ($result2 = $query2->fetch_object())
 			{
 			$mytopic .= "<br><b>" . $result2->task2_date . ":</b> $result2->remarks";
@@ -226,7 +230,7 @@ while ($result = $query->fetch_object())
 	echo "<td>" . "{$result->owner}" . "</td>";
 
 	echo "<form action='index.php?section=tasks2' method='post'>" 
-			. "<td>" . "<input type='hidden' id='uid1' name='r_id' value=" . "'{$result->id}'" . "></td>"
+			. "<td>" . "<input type='hidden' id='uid1' name='r_id' value=" . "'{$result->task1_uuid}'" . "></td>"
 			. "<td>" . "<input class='css_btn_class' name='select' type='submit' value='select' />" . "</td>"
 		. "</form>"
 		. "</tr>";

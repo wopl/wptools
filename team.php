@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** team.php                                      (c) Wolfram Plettscher 12/2015 **
+// ** team.php                                      (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -31,6 +31,7 @@ if (mysqli_connect_errno()) {
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
+$myacc = $_SESSION['account'];
 $myuser = $_SESSION['usershort'];
 $myuserid = $_SESSION['userid'];
 $myprojid = $_SESSION['projid'];
@@ -78,9 +79,9 @@ if (isset($_POST['update']))
 	$query = $mysqli->query ("UPDATE team2group SET
 		 role='$myrole',
 		 remarks='$myremarks'
-		 WHERE projid = '$myprojid'
-		 AND   teamid = '$myteamid'
-		 AND   groupid = '$mygroupid'");
+		 WHERE proj_uuid = '$myprojid'
+		 AND   teammember_uuid = '$myteamid'
+		 AND   projgroup_uuid = '$mygroupid'");
 
 	$_SESSION['kicker'] = "Record updated";
  	}
@@ -108,21 +109,22 @@ if (isset($_POST['update']))
 	        echo "<option value='all_groups'>All Groups</option>";
 
 		// following lines of Drop-Down Box are selected from project database
-		$query2 = $mysqli2->query ("SELECT groupid, name
+		$query2 = $mysqli2->query ("SELECT projgroup_uuid, name
 							  FROM projgroup
-							  WHERE projid = '$myprojid'
+							  WHERE proj_uuid = '$myprojid'
+							  AND   acc_uuid = '$myacc'
 							  ORDER BY prio ASC");
 		while ($result2 = $query2->fetch_object())
 			{
-			if ($mygroupselect == $result2->groupid)
+			if ($mygroupselect == $result2->projgroup_uuid)
 				{
-				echo "<option value='{$result2->groupid}' selected>{$result2->name}</option>";
-				$mygroupid = $result2->groupid;
+				echo "<option value='{$result2->projgroup_uuid}' selected>{$result2->name}</option>";
+				$mygroupid = $result2->projgroup_uuid;
 				$mygroupname = $result2->name;
 				}
 			else
 				{
-				echo "<option value='{$result2->groupid}'>{$result2->name}</option>";
+				echo "<option value='{$result2->projgroup_uuid}'>{$result2->name}</option>";
 				}
 			}
 
@@ -161,31 +163,36 @@ if (!isset($_POST['team4']) && !isset($_POST['update'])) {
 // Depending on selected group, we will show subsets of the team
 	if ($mygroupselect == "" || $mygroupselect == "all_groups")
 		{
-		$query = $mysqli->query ("SELECT teamid, firstname, lastname, company, location, dept, email, phone, position, remarks
+		$query = $mysqli->query ("SELECT teammember_uuid, firstname, lastname, company, location, dept, email, phone, position, remarks
 								  FROM team
-								  WHERE projid = '$myprojid'
+								  WHERE proj_uuid = '$myprojid'
+								  AND acc_uuid = '$myacc'
 								  ORDER BY lastname ASC, firstname ASC ");
 		}
 	elseif ($mygroupselect == "not_assigned")
 		{
-		$query = $mysqli->query ("SELECT teamid, firstname, lastname, company, location, dept, email, phone, position, remarks
+		$query = $mysqli->query ("SELECT teammember_uuid, firstname, lastname, company, location, dept, email, phone, position, remarks
 								  FROM team
-								  WHERE projid = '$myprojid'
-								  AND teamid NOT IN
+								  WHERE proj_uuid = '$myprojid'
+								  AND acc_uuid = '$myacc'
+								  AND teammember_uuid NOT IN
 								  	(
-									SELECT teamid FROM team2group
-									WHERE projid = '$myprojid'
+									SELECT teammember_uuid FROM team2group
+									WHERE proj_uuid = '$myprojid'
+									AND acc_uuid = '$myacc'
 									)
 								  ORDER BY lastname ASC, firstname ASC ");
 		}
 	else
 		{
-		$query = $mysqli->query ("SELECT t.teamid, t.firstname, t.lastname, t.company, t.location, t.dept, t.email, t.phone, t.position, t.remarks
+		$query = $mysqli->query ("SELECT t.teammember_uuid, t.firstname, t.lastname, t.company, t.location, t.dept, t.email, t.phone, t.position, t.remarks
 								  FROM team t, team2group tg
-								  WHERE tg.groupid = '$mygroupid'
-								  AND tg.projid = '$myprojid'
-								  AND t.projid = '$myprojid'
-								  AND tg.teamid = t.teamid
+								  WHERE tg.projgroup_uuid = '$mygroupid'
+								  AND tg.proj_uuid = '$myprojid'
+								  AND t.proj_uuid = '$myprojid'
+								  AND tg.acc_uuid = '$myacc'
+								  and t.acc_uuid = '$myacc'
+								  AND tg.teammember_uuid = t.teammember_uuid
 								  ORDER BY t.lastname ASC, t.firstname ASC ");
 		}
 
@@ -214,7 +221,7 @@ if (!isset($_POST['team4']) && !isset($_POST['update'])) {
 				. "<td>" . "{$result->firstname}" . "</td>"
 				. "<td>" . "{$result->remarks}" . "</td>"
 				. "<form action='index.php?section=teamedit' method='post'>" 
-					. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
+					. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teammember_uuid}'" . "></td>"
 					. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' />" . "</td>"
 				. "</form>"
 				. "</tr>";
@@ -245,7 +252,7 @@ if (!isset($_POST['team4']) && !isset($_POST['update'])) {
 				. "<td>" . "{$result->email}" . "</td>"
 				. "<td>" . "{$result->phone}" . "</td>"
 				. "<form action='index.php?section=teamedit' method='post'>" 
-					. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
+					. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teammember_uuid}'" . "></td>"
 					. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' />" . "</td>"
 				. "</form>"
 				. "</tr>";
@@ -279,7 +286,7 @@ if (!isset($_POST['team4']) && !isset($_POST['update'])) {
 				. "<td>" . "{$result->position}" . "</td>"
 				. "<td>" . "{$result->location}" . "</td>"
 				. "<form action='index.php?section=teamedit' method='post'>" 
-					. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teamid}'" . "></td>"
+					. "<td>" . "<input type='hidden' id='uid1' name='r_teamid' value=" . "'{$result->teammember_uuid}'" . "></td>"
 					. "<td>" . "<input class='css_btn_class' name='edit' type='submit' value='edit' />" . "</td>"
 				. "</form>"
 				. "</tr>";
@@ -308,31 +315,33 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 // Depending on selected group, we will show subsets of the team
 	if ($mygroupselect == "" || $mygroupselect == "all_groups")
 		{
-		$query2 = $mysqli2->query ("SELECT groupid, name
+		$query2 = $mysqli2->query ("SELECT projgroup_uuid, name
 								  FROM projgroup
-								  WHERE projid = '$myprojid'
+								  WHERE proj_uuid = '$myprojid'
 								  ORDER BY prio ASC ");
 		}
 	else
 		{
-		$query2 = $mysqli2->query ("SELECT groupid, name
+		$query2 = $mysqli2->query ("SELECT projgroup_uuid, name
 								  FROM projgroup
-								  WHERE projid = '$myprojid'
-								  AND   groupid = '$mygroupselect'
+								  WHERE proj_uuid = '$myprojid'
+								  AND   projgroup_uuid = '$mygroupselect'
 								  ORDER BY prio ASC ");
 		}
 
 	while ($result2 = $query2->fetch_object())
 		{
-		$mygroupid = "{$result2->groupid}";
+		$mygroupid = "{$result2->projgroup_uuid}";
 
 		echo "<h2>Group: " . "{$result2->name}" . "</h2>";
-		$query = $mysqli->query ("SELECT t.teamid, t.firstname, t.lastname, t.company, t.location, t.dept, t.email, t.phone, t.position, tg.role, tg.remarks
+		$query = $mysqli->query ("SELECT t.teammember_uuid, t.firstname, t.lastname, t.company, t.location, t.dept, t.email, t.phone, t.position, tg.role, tg.remarks
 								  FROM team t, team2group tg
-								  WHERE tg.groupid = '$mygroupid'
-								  AND tg.projid = '$myprojid'
-								  AND t.projid = '$myprojid'
-								  AND tg.teamid = t.teamid
+								  WHERE tg.projgroup_uuid = '$mygroupid'
+								  AND tg.proj_uuid = '$myprojid'
+								  AND t.proj_uuid = '$myprojid'
+								  AND tg.acc_uuid = '$myacc'
+								  AND t.acc_uuid = '$myacc'
+								  AND tg.teammember_uuid = t.teammember_uuid
 								  ORDER BY t.lastname ASC, t.firstname ASC ");
 
 		echo "<table class='sqltable2' border='0' cellspacing='0' cellpadding='2' width='100%' >\n";
@@ -378,7 +387,7 @@ if (isset($_POST['team4']) || isset($_POST['update'])) {
 						. "<td width='15'%>Remarks: </td>"
 						. "<td colspan='5'>" . "<input type='input' $mytableclass style='width:100%' id='uid2' name='r_remarks' value=" . "'{$result->remarks}'" . "></td>";
 				echo "</tr>";
-				echo "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teamid}'" . ">";
+				echo "<input type='hidden' id='uid3' name='r_teamid' value=" . "'{$result->teammember_uuid}'" . ">";
 				echo "<input type='hidden' id='uid4' name='r_groupid' value=" . "'{$mygroupid}'" . ">";
 			echo "</form>";
 			echo "</div>";

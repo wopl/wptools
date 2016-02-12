@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** user.php                                      (c) Wolfram Plettscher 12/2015 **
+// ** user.php                                      (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -24,6 +24,12 @@ if (mysqli_connect_errno()) {
 // react on previously pushed button to update mySQL database                     ---
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------
+// set global variables and comments before doing the real things                 ---
+// set values to '', if not previously set                                        ---
+//-----------------------------------------------------------------------------------
+
+$myacc = $_SESSION['account'];
 
 if (!isset ($_POST['r_userid'])) {
 	$_POST['r_userid'] = '';
@@ -48,13 +54,17 @@ $mylastname = $_POST['nachname'];
 $myemail = $_POST['email'];
 $myphone = $_POST['phone'];
 
+//-----------------------------------------------------------------------------------
+// react on previously pushed button to update mySQL database                     ---
+//-----------------------------------------------------------------------------------
+
 if (isset($_POST['new'])) {
-	$query = $mysqli->query ("	INSERT INTO user	(user, firstname, lastname, email, phone)
-								VALUES				('$myuser', '$myfirstname', '$mylastname', '$myemail', '$myphone')");
+	$query = $mysqli->query ("	INSERT INTO user	(acc_uuid, user_uuid, user, firstname, lastname, email, phone)
+								VALUES				('$myacc', UUID(), '$myuser', '$myfirstname', '$mylastname', '$myemail', '$myphone')");
 
 } elseif (isset($_POST['delete'])) {
-	$query = $mysqli->query ("DELETE FROM user WHERE id='$myuserid'");
-	$query = $mysqli->query ("DELETE FROM user2work WHERE userid='$myuserid'");
+	$query = $mysqli->query ("DELETE FROM user WHERE user_uuid='$myuserid'");
+//	$query = $mysqli->query ("DELETE FROM user2work WHERE userid='$myuserid'");
 
 } elseif (isset($_POST['change'])) {
 	$query = $mysqli->query ("UPDATE user SET
@@ -63,23 +73,24 @@ if (isset($_POST['new'])) {
 		 lastname='$mylastname',
 		 email='$myemail',
 		 phone='$myphone'
-		 WHERE id='$myuserid'");
+		 WHERE user_uuid='$myuserid'");
 } 
 
 //-----------------------------------------------------------------------------------
 // show user-table                                                      ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT id, user, firstname, lastname, email, phone FROM user");
+$query = $mysqli->query ("SELECT user_uuid, user, firstname, lastname, email, phone FROM user
+							ORDER BY lastname ASC, firstname ASC");
 
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
 
 echo "<tr>
-	<th> ID </th>
 	<th> User </th>
-	<th> Firstname </th>
 	<th> Lastname </th>
+	<th> Firstname </th>
 	<th> Mail </th>
 	<th> Phone </th>
+	<th> ID </th>
 	<th></th>
 	<th></th>
 	<th></th>
@@ -91,14 +102,15 @@ echo "<tr>
 	
 while ($result = $query->fetch_object())
 	{
-	echo "<tr><td>" . "{$result->id}" . "</td>"
+	echo "<tr>"
 		. "<td>" . "{$result->user}" . "</td>"
-		. "<td>" . "{$result->firstname}" . "</td>"
 		. "<td>" . "{$result->lastname}" . "</td>"
+		. "<td>" . "{$result->firstname}" . "</td>"
 		. "<td>" . "{$result->email}" . "</td>"
 		. "<td>" . "{$result->phone}" . "</td>"
+		. "<td>" . "{$result->user_uuid}" . "</td>"
 		. "<form action='index.php?section=user' method='post'>" 
-			. "<td>" . "<input type='hidden' id='uid1' name='r_userid' value=" . "'{$result->id}'" . "></td>"
+			. "<td>" . "<input type='hidden' id='uid1' name='r_userid' value=" . "'{$result->user_uuid}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid2' name='r_username' value=" . "'{$result->user}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid3' name='r_firstname' value=" . "'{$result->firstname}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid4' name='r_lastname' value=" . "'{$result->lastname}'" . "></td>"

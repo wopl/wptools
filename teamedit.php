@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** teamedit.php                                  (c) Wolfram Plettscher 12/2015 **
+// ** teamedit.php                                  (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -27,6 +27,7 @@ $_SESSION['kicker'] = "Edit fields. Then update database by pressing 'save' !";
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
+$myacc = $_SESSION['account'];
 $myuser = $_SESSION['usershort'];
 $myuserid = $_SESSION['userid'];
 $myprojid = $_SESSION['projid'];
@@ -55,47 +56,12 @@ if (isset ($_POST['r_phone']))	$myphone = $_POST['r_phone']; else $myphone = '';
 if (isset ($_POST['r_position']))	$myposition = $_POST['r_position']; else $myposition = '';
 if (isset ($_POST['r_remarks']))	$myremarks = $_POST['r_remarks']; else $myremarks = '';
 
-//	if (isset ($_POST['r_teamid'])) {
-//		$myteamid = $_POST['r_teamid'];
-//		$myfirstname = $_POST['r_firstname'];
-//		$mylastname = $_POST['r_lastname'];
-//		$mycompany = $_POST['r_company'];
-//		$mylocation = $_POST['r_location'];
-//		$mydept = $_POST['r_dept'];
-//		$myemail = $_POST['r_email'];
-//		$myphone = $_POST['r_phone'];
-//		$myposition = $_POST['r_position'];
-//		$myremarks = $_POST['r_remarks'];
-//	} else {
-//		$myteamid = '';
-//		$myfirstname = '';
-//		$mylastname = '';
-//		$mycompany = '';
-//		$mylocation = '';
-//		$mydept = '';
-//		$myemail = '';
-//		$myphone = '';
-//		$myposition = '';
-//		$myremarks = '';
-//	};
-
-
-//$myteamid = $_POST['r_teamid'];
-//$myfirstname = $_POST['r_firstname'];
-//$mylastname = $_POST['r_lastname'];
-//$mycompany = $_POST['r_company'];
-//$mylocation = $_POST['r_location'];
-//$mydept = $_POST['r_dept'];
-//$myemail = $_POST['r_email'];
-//$myphone = $_POST['r_phone'];
-//$myposition = $_POST['r_position'];
-//$myremarks = $_POST['r_remarks'];
 
 if (isset($_POST['edit'])) {
 	// this has been triggered by teamlist page; show all data for editing
 	$query = $mysqli->query ("SELECT firstname, lastname, company, location, dept, email, phone, position, remarks
 							FROM team
-							WHERE teamid = '$myteamid'
+							WHERE teammember_uuid = '$myteamid'
 							");
 	if ($result = $query->fetch_object()) {
 		$myfirstname = "{$result->firstname}";
@@ -114,19 +80,19 @@ if (isset($_POST['edit'])) {
 	if ($myteamid == "") {
 
 		// teamid is empty, therefore create a new record
-		$query = $mysqli->query ("	INSERT INTO team	(projid, firstname, lastname, company,
+		$query = $mysqli->query ("	INSERT INTO team	(acc_uuid, proj_uuid, teammember_uuid, firstname, lastname, company,
 														 location, dept, email, phone, position, remarks)
-									VALUES				('$myprojid', '$myfirstname', '$mylastname', '$mycompany',
+									VALUES				('$myacc', '$myprojid', UUID(), '$myfirstname', '$mylastname', '$mycompany',
 														 '$mylocation', '$mydept', '$myemail', '$myphone', '$myposition', '$myremarks')");
 		// select new teamid
-		$query = $mysqli->query ("SELECT teamid
+		$query = $mysqli->query ("SELECT teammember_uuid
 							  	FROM team
-							  	WHERE projid = '$myprojid'
+							  	WHERE proj_uuid = '$myprojid'
 							  	AND   firstname = '$myfirstname'
 								AND   lastname = '$mylastname'
 							    ");
 		if ($result = $query->fetch_object()) {
-			$myteamid = "{$result->teamid}";
+			$myteamid = "{$result->teammember_uuid}";
 			$_SESSION['kicker'] = "New project team member successfully created. Don't forget to assign new team member to at least one group!";
 		}
 	} else {
@@ -141,56 +107,11 @@ if (isset($_POST['edit'])) {
 			phone = '$myphone',
 			position = '$myposition',
 			remarks = '$myremarks'
-			WHERE teamid = '$myteamid'
-			AND projid = '$myprojid'");
+			WHERE team_uuid = '$myteamid'
+			AND proj_uuid = '$myprojid'");
 		$_SESSION['kicker'] = "Team member successfully updated.";
 	}
 }
-
-//if (isset($_POST['submit'])) {
-/*
-	// select selected project
-	$query = $mysqli->query ("SELECT projid, projshort
-							  FROM user2proj
-							  WHERE usershort = '$myuser'
-							  AND   projid = '$myselect'
-							  ORDER BY defaultproj DESC, projshort ASC
-							 ");
-	if ($result = $query->fetch_object()) {
-		$_SESSION['project'] = "Project: " . "{$result->projshort}";
-		$_SESSION['projid'] = "{$result->projid}";
-	}
-
-	// update default project into db
-	$query = $mysqli->query ("UPDATE user2proj SET
-		 defaultproj = FALSE
-		 WHERE usershort = '$myuser'");
-	$query = $mysqli->query ("UPDATE user2proj SET
-		 defaultproj = TRUE
-		 WHERE usershort = '$myuser'
-		 AND projid = '$mydefault'");
-
-	// now we need to refresh the screen; therefore these javascript lines
-	echo "<body onLoad='document.form1.submit()'>";
-	echo "<form name='form1' method='post' action='index.php?section=projsel'>";
-	echo "<input type='text' name='sqldone'>";
-	echo "</form></body>";
-}
-*/
-// This path will be executed after sql update (to update all values on screen based on selection)
-// Currently there is no extra action needed; refresh of screen is done at this moment
-//if (isset($_POST['sqldone'])) {
-//	echo "</br> POST = abc </br>";
-//}
-
-
-//-----------------------------------------------------------------------------------
-// edit team member                                                              ---
-//-----------------------------------------------------------------------------------
-//$query = $mysqli->query ("SELECT teamid, firstname, lastname
-//						  FROM team
-//						  WHERE projid = '$myprojid'
-//						  ORDER BY lastname ASC, firstname ASC ");
 
 
 ?>
@@ -243,13 +164,6 @@ if (isset($_POST['edit'])) {
 </form>
 
 <?php
-
-//echo "<form action='index.php?section=team' method='post'>";
-//echo "<input class='css_btn_class' name='return' type='submit' value='cancel / return' />";
-//echo "</form>";
-
-
-
 $mysqli->close();
 ?>
 
