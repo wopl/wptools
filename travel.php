@@ -112,14 +112,21 @@ echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
 echo "<tr>
 	<th> Start </th>
 	<th> Time </th>
+	<th></th>
 	<th> km/mls </th>
+	<th></th>
 	<th> End </th>
 	<th> Time </th>
+	<th></th>
 	<th> km/mls </th>
+	<th></th>
 	<th> Distance </th>
+	<th></th>
 	<th> Route </th>
+	<th></th>
 	<th> Comment </th>
-	<th> ID </th>
+	<th></th>
+	<th> ref </th>
 	<th></th>
 	<th></th>
 	<th></th>
@@ -138,14 +145,21 @@ while ($result = $query->fetch_object())
 		
 	echo "<tr><td>" . "{$result->date_start}" . "</td>"
 		. "<td>" . "{$result->time_start}" . "</td>"
-		. "<td>" . "{$result->km_start}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
+		. "<td align='right'>" . "{$result->km_start}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
 		. "<td>" . "{$result->date_end}" . "</td>"
 		. "<td>" . "{$result->time_end}" . "</td>"
-		. "<td>" . "{$result->km_end}" . "</td>"
-		. "<td>" . "{$mydistance}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
+		. "<td align='right'>" . "{$result->km_end}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
+		. "<td align='right'>" . "{$mydistance}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
 		. "<td>" . "{$result->route}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
 		. "<td>" . "{$result->purpose}" . "</td>"
-		. "<td>" . "{$result->travel_uuid}" . "</td>"
+		. "<td style='width:1px; background-color:#ffffff;'>" . "</td>"
+		. "<td>" . substr ("{$result->travel_uuid}",0,8) . "</td>"
 		. "<form action='index.php?section=travel' method='post'>" 
 			. "<td>" . "<input type='hidden' id='uid1' name='r_id' value=" . "'{$result->travel_uuid}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid2' name='r_date_start' value=" . "'{$result->date_start}'" . "></td>"
@@ -167,7 +181,7 @@ echo "</table><br /><br />";
 
 	<table>
     	<tr>
-         	<td>ID: </td>
+         	<td>ref: </td>
         	<td><input type="text" name="id" size="10" value="<?php echo $_POST["r_id"]; ?>" maxlength="30" tabindex="1" readonly/></td>
         </tr><tr>
 	       	<td>Start Date: </td>

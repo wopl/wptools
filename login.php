@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** login.php                                     (c) Wolfram Plettscher 01/2016 **
+// ** login.php                                     (c) Wolfram Plettscher 02/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 
 	// Get account uuid and check, if account is active
-	$query = $mysqli->query ("SELECT acc_uuid
+	$query = $mysqli->query ("SELECT acc_uuid, inv_company
 							  FROM account
 							  WHERE acc_name = '$account'
 							  AND active = '1'
@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if ($result = $query->fetch_object()) {
 		$myacc = $result->acc_uuid;
 		$_SESSION['account'] = $myacc;
+		$_SESSION['company'] = $result->inv_company;
 		
 		$pw_hash = md5($pw);
 

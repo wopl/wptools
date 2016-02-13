@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** index.php                                     (c) Wolfram Plettscher 12/2015 **
+// ** index.php                                     (c) Wolfram Plettscher 02/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -50,10 +50,12 @@ if (isset ($_GET["section"]))
 				?>	
 
             	<table width="1220px"><tr>
-					<td align="left" valign="bottom"><b>Wolfram Plettscher's Project Tools</b></td>
-					<td align="right" valign="bottom"><b><?php echo $_SESSION['welcome']; ?></b></td>
+					<td width='400px' align="left" valign="bottom"><b>Wolfram Plettscher's Project Tools</b></td>
+					<td align="center" valign="bottom"><b><?php echo $_SESSION['company']; ?></b></td>
+					<td width='400px' align="right" valign="bottom"><b><?php echo $_SESSION['welcome']; ?></b></td>
 				</tr><tr>
                     <td align="left" valign="bottom"><b><?php echo $datum; ?></b></td> 
+					<td align="center" valign="bottom"><b></b></td>
                     <td align="right" valign="bottom"><b><?php echo $_SESSION['project']; ?></b></td>
 				</tr></table>
             </div>

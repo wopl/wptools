@@ -107,7 +107,7 @@ if (isset($_POST['edit'])) {
 			phone = '$myphone',
 			position = '$myposition',
 			remarks = '$myremarks'
-			WHERE team_uuid = '$myteamid'
+			WHERE teammember_uuid = '$myteamid'
 			AND proj_uuid = '$myprojid'");
 		$_SESSION['kicker'] = "Team member successfully updated.";
 	}
