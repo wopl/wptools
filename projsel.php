@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** projsel.php                                   (c) Wolfram Plettscher 12/2015 **
+// ** projsel.php                                   (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -33,7 +33,8 @@ if (mysqli_connect_errno()) {
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
 
-	$myuser = $_SESSION['usershort'];
+	$myacc = $_SESSION['account'];
+	$myuser = $_SESSION['userid'];
 
 	if (!isset ($_POST['select'])) $_POST['select'] = '';
 	if (!isset ($_POST['default'])) $_POST['default'] = '';
@@ -44,22 +45,23 @@ if (mysqli_connect_errno()) {
 if (isset($_POST['submit']) || isset($_POST['editgroups'])) {
 
 	// select selected project
-	$query = $mysqli->query ("SELECT projid, projshort
+	$query = $mysqli->query ("SELECT proj_uuid, projshort
 							  FROM user2proj
-							  WHERE usershort = '$myuser'
-							  AND   projid = '$myselect'
+							  WHERE user_uuid = '$myuser'
+							  AND	acc_uuid = '$myacc'
+							  AND   proj_uuid = '$myselect'
 							  ORDER BY defaultproj DESC, projshort ASC
 							 ");
 	if ($result = $query->fetch_object()) {
 //		$_SESSION['project'] = "Project: " . "{$result->projshort}";
-		$_SESSION['projid'] = "{$result->projid}";
+		$_SESSION['projid'] = "{$result->proj_uuid}";
 	}
-    $myprojid = $result->projid;
+    $myprojid = $result->proj_uuid;
 
 	// select long name for selected project
 	$query = $mysqli->query ("SELECT projlong
 							  FROM project
-							  WHERE projid = '$myprojid'
+							  WHERE proj_uuid = '$myprojid'
 							 ");
 	if ($result = $query->fetch_object()) {
 		$_SESSION['project'] = "Project: " . "{$result->projlong}";
@@ -68,11 +70,14 @@ if (isset($_POST['submit']) || isset($_POST['editgroups'])) {
 	// update default project into db
 	$query = $mysqli->query ("UPDATE user2proj SET
 		 defaultproj = FALSE
-		 WHERE usershort = '$myuser'");
+		 WHERE user_uuid = '$myuser'
+		 AND acc_uuid = '$myacc'");
+		 
 	$query = $mysqli->query ("UPDATE user2proj SET
 		 defaultproj = TRUE
-		 WHERE usershort = '$myuser'
-		 AND projid = '$mydefault'");
+		 WHERE user_uuid = '$myuser'
+		 AND acc_uuid = '$myacc'
+		 AND proj_uuid = '$mydefault'");
 
 	// now we need to refresh the screen; therefore these javascript lines
 	// switch to 'Project-Groups' form if this button was pressed
@@ -96,9 +101,9 @@ if (isset($_POST['submit']) || isset($_POST['editgroups'])) {
 //-----------------------------------------------------------------------------------
 // show user-project assignements                                                      ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT projid, projshort, defaultproj FROM user2proj
-						  WHERE usershort = '$myuser'
-						  ORDER by projid ASC ");
+$query = $mysqli->query ("SELECT proj_uuid, projshort, defaultproj FROM user2proj
+						  WHERE user_uuid = '$myuser'
+						  ORDER by proj_uuid ASC ");
 
 echo "<form method='post' action='index.php?section=projsel'>"; 
 
@@ -114,24 +119,24 @@ echo "<tr>
 while ($result = $query->fetch_object())
 	{
 	// now select for this element the long-name of project
-	$myprojid = $result->projid;
+	$myprojid = $result->proj_uuid;
 	$query2 = $mysqli2->query ("SELECT projlong FROM project
-							    WHERE projid = '$myprojid' ");
+							    WHERE proj_uuid = '$myprojid' ");
 	$result2 = $query2->fetch_object();
 		
 	echo "<tr>";
 
-	if ($result->projid == $_SESSION['projid'])
-		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' checked>" . "</td>";
+	if ($result->proj_uuid == $_SESSION['projid'])
+		echo "<td>" . "<input type='radio' name='select' value='{$result->proj_uuid}' checked>" . "</td>";
 	else
-		echo "<td>" . "<input type='radio' name='select' value='{$result->projid}' >" . "</td>";
+		echo "<td>" . "<input type='radio' name='select' value='{$result->proj_uuid}' >" . "</td>";
 
 	if ($result->defaultproj == '1' )
-		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' checked>" . "</td>";
+		echo "<td>" . "<input type='radio' name='default' value='{$result->proj_uuid}' checked>" . "</td>";
 	else
-		echo "<td>" . "<input type='radio' name='default' value='{$result->projid}' >" . "</td>";
+		echo "<td>" . "<input type='radio' name='default' value='{$result->proj_uuid}' >" . "</td>";
 
-	echo "<td>" . "{$result->projid}" . "</td>"
+	echo "<td>" . "{$result->proj_uuid}" . "</td>"
 		. "<td>" . "{$result2->projlong}" . "</td>"
 		. "</tr>";
 	}

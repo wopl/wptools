@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** teamassign.php                                (c) Wolfram Plettscher 12/2015 **
+// ** teamassign.php                                (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -24,6 +24,7 @@ if (mysqli_connect_errno()) {
 // set global variables and comments before doing the real things                 ---
 // set values to '', if not previously set                                        ---
 //-----------------------------------------------------------------------------------
+$myacc = $_SESSION['account'];
 $myuser = $_SESSION['usershort'];
 $myuserid = $_SESSION['userid'];
 $myprojid = $_SESSION['projid'];
@@ -48,27 +49,27 @@ if (isset($_POST['delete']) || isset($_POST['delgroup']))
 	{
 	// Delete Group Assignment
 	$query = $mysqli->query ("DELETE FROM team2group
-							  WHERE projid = '$myprojid'
-							  AND   teamid = '$myteamid'
-							  AND   groupid = '$mygroupid' ");
+							  WHERE proj_uuid = '$myprojid'
+							  AND   teammember_uuid = '$myteamid'
+							  AND   projgroup_uuid = '$mygroupid' ");
 	}
 
 if (isset($_POST['setgroup']))
 	{
 	// Set Group Assignment
-	$query = $mysqli->query ("	INSERT INTO team2group	(projid, teamid, groupid)
-								VALUES				('$myprojid', '$myteamid', '$mygroupid')");
+	$query = $mysqli->query ("	INSERT INTO team2group	(acc_uuid, proj_uuid, teammember_uuid, projgroup_uuid)
+								VALUES				('$myacc', '$myprojid', '$myteamid', '$mygroupid')");
 	}
 
 //-----------------------------------------------------------------------------------
 // show/edit team to group assignements                                                      ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT projgroup.groupid, projgroup.name, team2group.teamid, team2group.role, team2group.remarks
+$query = $mysqli->query ("SELECT projgroup.projgroup_uuid, projgroup.name, team2group.teammember_uuid, team2group.role, team2group.remarks
 						  FROM projgroup
 						  LEFT JOIN team2group
-						  	ON projgroup.groupid = team2group.groupid
-							AND team2group.teamid = '$myteamid'
-						  WHERE projgroup.projid = '$myprojid'
+						  	ON projgroup.projgroup_uuid = team2group.projgroup_uuid
+							AND team2group.teammember_uuid = '$myteamid'
+						  WHERE projgroup.proj_uuid = '$myprojid'
 						  ORDER by projgroup.prio ASC ");
 
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
@@ -90,7 +91,7 @@ while ($result = $query->fetch_object())
 	{
 	echo "<tr>";
 
-		if ($result->teamid == $myteamid)
+		if ($result->teammember_uuid == $myteamid)
 			{
 			echo "<td>" . "<input type='checkbox' name='selected' disabled='disabled' checked>" . "</td>";
 			$my_ischecked = 1;
@@ -102,7 +103,7 @@ while ($result = $query->fetch_object())
 			}
 		echo "<td>" . "{$result->name}" . "</td>";
 		echo "<form action='index.php?section=teamassign' method='post'>" 
-				. "<td>" . "<input type='hidden' id='uid1' name='r_groupid' value=" . "'{$result->groupid}'" . "></td>"
+				. "<td>" . "<input type='hidden' id='uid1' name='r_groupid' value=" . "'{$result->projgroup_uuid}'" . "></td>"
 				. "<td>" . "<input type='hidden' id='uid2' name='r_teamid' value=" . "'{$myteamid}'" . "></td>"
 				. "<td>" . "<input type='hidden' id='uid3' name='r_firstname' value=" . "'{$myfirstname}'" . "></td>"
 				. "<td>" . "<input type='hidden' id='uid4' name='r_lastname' value=" . "'{$mylastname}'" . "></td>"

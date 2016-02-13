@@ -1,7 +1,7 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** travel.php                                    (c) Wolfram Plettscher 12/2015 **
+// ** travel.php                                    (c) Wolfram Plettscher 02/2016 **
 // **                                                                              **
 // **********************************************************************************
 
@@ -19,6 +19,15 @@ if (mysqli_connect_errno()) {
 	printf ("Verbindung fehlgeschlagen: %s\n", mysqli_connect_error());
 	exit();
 }
+
+//-----------------------------------------------------------------------------------
+// set global variables and comments before doing the real things                 ---
+// set values to '', if not previously set                                        ---
+//-----------------------------------------------------------------------------------
+
+$myacc = $_SESSION['account'];
+$myuserid = $_SESSION['userid'];
+$myusershort = $_SESSION['usershort'];
 
 //-----------------------------------------------------------------------------------
 // react on previously pushed button to update mySQL database                     ---
@@ -63,13 +72,16 @@ if (mysqli_connect_errno()) {
 	};
 	
 if (isset($_POST['new'])) {
-	$query = $mysqli->query ("	INSERT INTO travel	(id, userid, usershort, date_start, time_start, km_start,
+	$query = $mysqli->query ("	INSERT INTO travel	(acc_uuid, user_uuid, travel_uuid, usershort, date_start, time_start, km_start,
 													 date_end, time_end, km_end, route, purpose)
-								VALUES				('$myid', '$myuserid', '$myusershort', '$mydatestart', '$mytimestart', '$mykmstart',
+								VALUES				('$myacc', '$myuserid', UUID(), '$myusershort', '$mydatestart', '$mytimestart', '$mykmstart',
 													 '$mydateend', '$mytimeend', '$mykmend', '$myroute', '$mypurpose')");
 
 } elseif (isset($_POST['delete'])) {
-	$query = $mysqli->query ("DELETE FROM travel WHERE id='$myid'");
+	$query = $mysqli->query ("DELETE FROM travel
+								WHERE travel_uuid='$myid'
+								AND user_uuid = '$myuserid'
+								AND acc_uuid = '$myacc' ");
 
 } elseif (isset($_POST['change'])) {
 	$query = $mysqli->query ("UPDATE travel SET
@@ -81,15 +93,18 @@ if (isset($_POST['new'])) {
 		 km_end='$mykmend',
 		 route='$myroute',
 		 purpose='$mypurpose'
-		 WHERE id='$myid'");
+		 WHERE travel_uuid = '$myid'
+		 AND user_uuid = '$myuserid'
+		 AND acc_uuid = '$myacc' ");
 } 
 
 //-----------------------------------------------------------------------------------
-// show user-table                                                      ---
+// show user-table                                                                ---
 //-----------------------------------------------------------------------------------
-$query = $mysqli->query ("SELECT id, date_start, time_start, km_start, date_end, time_end, km_end, route, purpose
+$query = $mysqli->query ("SELECT travel_uuid, date_start, time_start, km_start, date_end, time_end, km_end, route, purpose
 						  FROM travel
-						  WHERE userid = '$myuserid'
+						  WHERE user_uuid = '$myuserid'
+						  AND acc_uuid = '$myacc'
 						  ORDER BY date_start DESC, time_start DESC");
 
 echo "<table class='sqltable' border='0' cellspacing='0' cellpadding='2' >\n";
@@ -130,9 +145,9 @@ while ($result = $query->fetch_object())
 		. "<td>" . "{$mydistance}" . "</td>"
 		. "<td>" . "{$result->route}" . "</td>"
 		. "<td>" . "{$result->purpose}" . "</td>"
-		. "<td>" . "{$result->id}" . "</td>"
+		. "<td>" . "{$result->travel_uuid}" . "</td>"
 		. "<form action='index.php?section=travel' method='post'>" 
-			. "<td>" . "<input type='hidden' id='uid1' name='r_id' value=" . "'{$result->id}'" . "></td>"
+			. "<td>" . "<input type='hidden' id='uid1' name='r_id' value=" . "'{$result->travel_uuid}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid2' name='r_date_start' value=" . "'{$result->date_start}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid3' name='r_time_start' value=" . "'{$result->time_start}'" . "></td>"
 			. "<td>" . "<input type='hidden' id='uid4' name='r_km_start' value=" . "'{$result->km_start}'" . "></td>"

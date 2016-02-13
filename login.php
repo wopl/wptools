@@ -1,20 +1,25 @@
 <?php
 // **********************************************************************************
 // **                                                                              **
-// ** login.php                                     (c) Wolfram Plettscher 12/2015 **
+// ** login.php                                     (c) Wolfram Plettscher 01/2016 **
 // **                                                                              **
 // **********************************************************************************
 
 include "inc/menuhref.inc";
 
+//-----------------------------------------------------------------------------------
+// react on previously pushed buttons                                             ---
+//-----------------------------------------------------------------------------------
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	session_start();
 
-    $user = $_POST['user'];
-    $pass = $_POST['pass'];
+	$account = $_POST['account'];
+	$user = $_POST['user'];
+	$pw = $_POST['pw'];
 
-    $hostname = $_SERVER['HTTP_HOST'];
-    $path = dirname($_SERVER['PHP_SELF']);
+	$hostname = $_SERVER['HTTP_HOST'];
+	$path = dirname($_SERVER['PHP_SELF']);
 
 	// Access database to verify credentials
 	include "mysql/credentials.inc";
@@ -26,72 +31,85 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		exit();
 	}
 
-	$passmd5 = md5($pass);
-
-	// Select the user from database
-	$query = $mysqli->query ("SELECT id, firstname, lastname
-							  FROM user
-							  WHERE user = '$user'
-							  AND password = '$passmd5'
+	// Get account uuid and check, if account is active
+	$query = $mysqli->query ("SELECT acc_uuid
+							  FROM account
+							  WHERE acc_name = '$account'
+							  AND active = '1'
 							  ");
 
 	if ($result = $query->fetch_object()) {
-		// we found the user in database
-
-    	$_SESSION['loggedin'] = true;
-		$_SESSION['TIME'] = time();
-		$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
-		$_SESSION['userid'] = "{$result->id}";
-		$_SESSION['usershort'] = $user;
-		$_SESSION['kicker'] = "";
-
-		// update last login and # of logins
-		$myid = "{$result->id}";
-		$query = $mysqli->query ("UPDATE user
-								  SET sessionctr = sessionctr + 1
-								  WHERE id = '$myid'");
-
-		// get group rights
-		$query = $mysqli->query ("SELECT groupshort
-								  FROM user2group
-								  WHERE usershort = '$user'
-								  ");
-		if ($result = $query->fetch_object()) {
-			$_SESSION['usergroup'] = "{$result->groupshort}";
-		}
+		$myacc = $result->acc_uuid;
+		$_SESSION['account'] = $myacc;
 		
-		// select default project
-		$query = $mysqli->query ("SELECT projid, projshort
-								  FROM user2proj
-								  WHERE usershort = '$user'
-								  ORDER BY defaultproj DESC, projshort ASC
+		$pw_hash = md5($pw);
+
+		// Select the user from database
+		$query = $mysqli->query ("SELECT user_uuid, firstname, lastname, user_role
+								  FROM user
+								  WHERE user = '$user'
+								  AND password = '$pw_hash'
+								  AND acc_uuid = '$myacc'
 								  ");
+
 		if ($result = $query->fetch_object()) {
-			$myprojid = "{$result->projid}";
-			$_SESSION['projid'] = $myprojid;
-			$query = $mysqli->query ("SELECT projlong
-									  FROM project
-									  WHERE projid = '$myprojid'
+			// we found the user in database
+
+			$_SESSION['loggedin'] = true;
+			$_SESSION['TIME'] = time();
+			$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
+			$_SESSION['userid'] = "{$result->user_uuid}";
+			$_SESSION['usershort'] = $user;
+			$_SESSION['kicker'] = "";
+			$_SESSION['usergroup'] = $result->user_role;
+
+			// update last login and # of logins
+			$myid = "{$result->user_uuid}";
+			$query = $mysqli->query ("UPDATE user
+									  SET sessionctr = sessionctr + 1
+									  WHERE user_uuid = '$myid'");
+
+			// get group rights
+//			$query = $mysqli->query ("SELECT groupshort
+//									  FROM user2group
+//									  WHERE usershort = '$user'
+//									  ");
+//			if ($result = $query->fetch_object()) {
+//				$_SESSION['usergroup'] = "{$result->groupshort}";
+//			}
+			
+			// select default project
+			$query = $mysqli->query ("SELECT proj_uuid, projshort
+									  FROM user2proj
+									  WHERE user_uuid = '$myid'
+									  ORDER BY defaultproj DESC, projshort ASC
 									  ");
 			if ($result = $query->fetch_object()) {
-				$_SESSION['project'] = "Project: " . "{$result->projlong}";
+				$myprojid = "{$result->proj_uuid}";
+				$_SESSION['projid'] = $myprojid;
+				$query = $mysqli->query ("SELECT projlong
+										  FROM project
+										  WHERE proj_uuid = '$myprojid'
+										  ");
+				if ($result = $query->fetch_object()) {
+					$_SESSION['project'] = "Project: " . "{$result->projlong}";
+				}
 			}
+
+			// Weiterleitung zur geschützten Startseite
+			if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+				if (php_sapi_name() == 'cgi') {
+					header('Status: 303 See Other');
+				} else {
+					header('HTTP/1.1 303 See Other');
+				}
+			}
+
+			header ('Location: ' . checksslproxy ('index.php?section=home'));
+			exit;
 		}
-
-        // Weiterleitung zur geschützten Startseite
-        if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
-        	if (php_sapi_name() == 'cgi') {
-         		header('Status: 303 See Other');
-         	} else {
-         		header('HTTP/1.1 303 See Other');
-         	}
-        }
-
-		header ('Location: ' . checksslproxy ('index.php?section=home'));
-        exit;
 	}
 }
-
 ?>
 
 <!--
@@ -133,17 +151,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form action="<?php echo checksslproxy ('login.php')?>" method="post">
                 <table>
                     <tr>
+                        <td>Account: </td>
+                        <td><input type="text" name="account" size="20" value="" maxlength="30" tabindex="1"/></td>
+                    </tr><tr>
                         <td>Username: </td>
-                        <td><input type="text" name="user" size="20" value="" maxlength="30" tabindex="1"/></td>
+                        <td><input type="text" name="user" size="20" value="" maxlength="30" tabindex="2"/></td>
                     </tr><tr>
                         <td>Password: </td>
-                        <td><input type="password" name="pass" size="20" value="" maxlength="30" tabindex="2"/></td>
+                        <td><input type="password" name="pw" size="20" value="" maxlength="30" tabindex="3"/></td>
                     </tr>
                 </table>
                 <br />
                 <table>
                     <tr>
                     <td><input class='css_btn_class' name='login' type='submit' value='login' /></td>
+                    <td><input class='css_btn_class' name='newaccount' type='submit' value='new Account' formaction='newaccount.php'/></td>
                     </tr>
                 </table>
             </form>
