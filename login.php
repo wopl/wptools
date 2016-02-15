@@ -6,6 +6,7 @@
 // **********************************************************************************
 
 include "inc/menuhref.inc";
+include "inc/password.class.php";
 
 //-----------------------------------------------------------------------------------
 // react on previously pushed buttons                                             ---
@@ -18,96 +19,112 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$user = $_POST['user'];
 	$pw = $_POST['pw'];
 
-	$hostname = $_SERVER['HTTP_HOST'];
-	$path = dirname($_SERVER['PHP_SELF']);
+	// we check inputs of account, user and password before we allow to access the DB
+	// all three inputs will be verified by Password::check  (same criteria)
+	if (Password::check ($account) && Password::check($user) && Password::check($pw)) {
 
-	// Access database to verify credentials
-	include "mysql/credentials.inc";
-	$mysqli = new mysqli($host,$username,$password,$database);
-
-	// Verbindung prüfen
-	if (mysqli_connect_errno()) {
-		printf ("Verbindung fehlgeschlagen: %s\n", mysqli_connect_error());
-		exit();
-	}
-
-	// Get account uuid and check, if account is active
-	$query = $mysqli->query ("SELECT acc_uuid, inv_company
-							  FROM account
-							  WHERE acc_name = '$account'
-							  AND active = '1'
-							  ");
-
-	if ($result = $query->fetch_object()) {
-		$myacc = $result->acc_uuid;
-		$_SESSION['account'] = $myacc;
-		$_SESSION['company'] = $result->inv_company;
+		// now hash the password to check against DB
+		Password::$salt = $user;
+		$pw_hash = Password::hash ($pw);
+//echo $pw_hash;
+//exit();
 		
-		$pw_hash = md5($pw);
+		$hostname = $_SERVER['HTTP_HOST'];
+		$path = dirname($_SERVER['PHP_SELF']);
 
-		// Select the user from database
-		$query = $mysqli->query ("SELECT user_uuid, firstname, lastname, user_role
-								  FROM user
-								  WHERE user = '$user'
-								  AND password = '$pw_hash'
-								  AND acc_uuid = '$myacc'
+		// Access database to verify credentials
+		include "mysql/credentials.inc";
+		$mysqli = new mysqli($host,$username,$password,$database);
+
+		// Verbindung prüfen
+		if (mysqli_connect_errno()) {
+			printf ("Verbindung fehlgeschlagen: %s\n", mysqli_connect_error());
+			exit();
+		}
+
+		// Get account uuid and check, if account is active
+		$query = $mysqli->query ("SELECT acc_uuid, inv_company
+								  FROM account
+								  WHERE acc_name = '$account'
+								  AND active = '1'
 								  ");
 
 		if ($result = $query->fetch_object()) {
-			// we found the user in database
-
-			$_SESSION['loggedin'] = true;
-			$_SESSION['TIME'] = time();
-			$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
-			$_SESSION['userid'] = "{$result->user_uuid}";
-			$_SESSION['usershort'] = $user;
-			$_SESSION['kicker'] = "";
-			$_SESSION['usergroup'] = $result->user_role;
-
-			// update last login and # of logins
-			$myid = "{$result->user_uuid}";
-			$query = $mysqli->query ("UPDATE user
-									  SET sessionctr = sessionctr + 1
-									  WHERE user_uuid = '$myid'");
-
-			// get group rights
-//			$query = $mysqli->query ("SELECT groupshort
-//									  FROM user2group
-//									  WHERE usershort = '$user'
-//									  ");
-//			if ($result = $query->fetch_object()) {
-//				$_SESSION['usergroup'] = "{$result->groupshort}";
-//			}
+			$myacc = $result->acc_uuid;
+			$_SESSION['account'] = $myacc;
+			$_SESSION['company'] = $result->inv_company;
 			
-			// select default project
-			$query = $mysqli->query ("SELECT proj_uuid, projshort
-									  FROM user2proj
-									  WHERE user_uuid = '$myid'
-									  ORDER BY defaultproj DESC, projshort ASC
+			// check and hash the password
+			$pwh = new Password();
+			if (! $pwh->check ($pw))
+				exit();
+			$pw_hash = $pwh->hash ($pw);
+			//$pw_hash = md5($pw);
+
+			// Select the user from database
+			$query = $mysqli->query ("SELECT user_uuid, firstname, lastname, user_role
+									  FROM user
+									  WHERE user = '$user'
+									  AND password = '$pw_hash'
+									  AND acc_uuid = '$myacc'
 									  ");
+
 			if ($result = $query->fetch_object()) {
-				$myprojid = "{$result->proj_uuid}";
-				$_SESSION['projid'] = $myprojid;
-				$query = $mysqli->query ("SELECT projlong
-										  FROM project
-										  WHERE proj_uuid = '$myprojid'
+				// we found the user in database
+
+				$_SESSION['loggedin'] = true;
+				$_SESSION['TIME'] = time();
+				$_SESSION['welcome'] = "Welcome " . "{$result->firstname}" . " {$result->lastname}";
+				$_SESSION['userid'] = "{$result->user_uuid}";
+				$_SESSION['usershort'] = $user;
+				$_SESSION['kicker'] = "";
+				$_SESSION['usergroup'] = $result->user_role;
+
+				// update last login and # of logins
+				$myid = "{$result->user_uuid}";
+				$query = $mysqli->query ("UPDATE user
+										  SET sessionctr = sessionctr + 1
+										  WHERE user_uuid = '$myid'");
+
+				// get group rights
+	//			$query = $mysqli->query ("SELECT groupshort
+	//									  FROM user2group
+	//									  WHERE usershort = '$user'
+	//									  ");
+	//			if ($result = $query->fetch_object()) {
+	//				$_SESSION['usergroup'] = "{$result->groupshort}";
+	//			}
+				
+				// select default project
+				$query = $mysqli->query ("SELECT proj_uuid, projshort
+										  FROM user2proj
+										  WHERE user_uuid = '$myid'
+										  ORDER BY defaultproj DESC, projshort ASC
 										  ");
 				if ($result = $query->fetch_object()) {
-					$_SESSION['project'] = "Project: " . "{$result->projlong}";
+					$myprojid = "{$result->proj_uuid}";
+					$_SESSION['projid'] = $myprojid;
+					$query = $mysqli->query ("SELECT projlong
+											  FROM project
+											  WHERE proj_uuid = '$myprojid'
+											  ");
+					if ($result = $query->fetch_object()) {
+						$_SESSION['project'] = "Project: " . "{$result->projlong}";
+					}
 				}
-			}
 
-			// Weiterleitung zur geschützten Startseite
-			if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
-				if (php_sapi_name() == 'cgi') {
-					header('Status: 303 See Other');
-				} else {
-					header('HTTP/1.1 303 See Other');
+				// Weiterleitung zur geschützten Startseite
+				if ($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.1') {
+					if (php_sapi_name() == 'cgi') {
+						header('Status: 303 See Other');
+					} else {
+						header('HTTP/1.1 303 See Other');
+					}
 				}
-			}
 
-			header ('Location: ' . checksslproxy ('index.php?section=home'));
-			exit;
+				header ('Location: ' . checksslproxy ('index.php?section=home'));
+				exit;
+			}
 		}
 	}
 }

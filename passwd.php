@@ -7,8 +7,10 @@
 
 // Display page only, if authenticated, otherwise jump to login page
 include ('auth.php');
+include "inc/password.class.php";
 
 echo "<h1>Change Password</h1>";
+echo "<b>A password may not contain any special characters (only a-z, A-Z and 0-9) and is 4-32 characters long.</b><br><br>";
 
 include "mysql/credentials.inc";
 
@@ -37,29 +39,29 @@ if (mysqli_connect_errno()) {
 	$mynewpw2 = $_POST['newpw2'];
 
 if (isset($_POST['change'])) {
-
-	if ($mynewpw1 != $mynewpw2) {
-		$_SESSION['kicker'] = "new password inputs do not match";
-	} elseif ($mynewpw1 == ""){
+	if (!Password::check ($myuser)) {
+		$_SESSION['kicker'] = "Something is wrong with your user-id. Please consult your administrator.";
+	} elseif (!Password::check($myoldpw)) {
+		$_SESSION['kicker'] = "Your old password has not been accepted. Please try again.";
+	} elseif ($mynewpw1 == "") {
 		$_SESSION['kicker'] = "new password may not be empty";
+	} elseif ($mynewpw1 != $mynewpw2) {
+		$_SESSION['kicker'] = "new password inputs do not match";
+	} elseif (!Password::check($mynewpw1) || !Password::check($mynewpw2)) {
+		$_SESSION['kicker'] = "Your new password has not been accepted. Please try again.";
 	} else {
 		// select users password from db
 		$query = $mysqli->query ("SELECT password
 								  FROM user
 								  WHERE user_uuid = '$myuserid'");
 		if ($result = $query->fetch_object()) {
-//			$mydbmd5 = $result->password;
-//			$mymd5 = md5($myoldpw);
 			$dbpw_hash = $result->password;
-			$oldpw_hash = md5($myoldpw);
-//			if ($mydbmd5 == $mymd5) {
-			if ($dbpw_hash == $oldpw_hash) {
-				// Update password in database
-//				$mynewmd5 = md5($mynewpw1);
-//				$query = $mysqli->query ("UPDATE user SET
-//					 password = '$mynewmd5'
-//					 WHERE id = '$myuserid'");
-				$newpw_hash = md5($mynewpw1);
+			Password::$salt = $myuser;
+			$oldpw_hash = Password::hash($myoldpw);
+			if ($dbpw_hash === $oldpw_hash) {
+
+			// Update password in database
+				$newpw_hash = Password::hash($mynewpw1);
 				$query = $mysqli->query ("UPDATE user SET
 					 password = '$newpw_hash'
 					 WHERE user_uuid = '$myuserid'");
@@ -69,7 +71,7 @@ if (isset($_POST['change'])) {
 			}
 		}
 	}
-
+	
 	// now we need to refresh the screen; therefore these javascript lines
 //	echo "<body onLoad='document.form1.submit()'>";
 //	echo "<form name='form1' method='post' action='index.php?section=projsel'>";
