@@ -159,7 +159,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <div id="cssmenu">
             <ul>
-				<li class='active'><a href='<?php echo checksslproxy ('login.php')?>'><span>Login</span></a></li> 
+		<li class='active'><a href='<?php echo checksslproxy ('login.php')?>'><span>Login</span></a></li> 
+		<li><a href='<?php echo checksslproxy ('privacy.php')?>'><span>Privacy Policy</span></a></li> 
+		<li><a href='<?php echo checksslproxy ('loginimpressum.php')?>'><span>Impressum</span></a></li> 
             </ul>
         </div>
             
@@ -192,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  	</div>
         
 	<div id="footer">
-		&copy; Wolfram Plettscher 2016
+		&copy; Wolfram Plettscher 2018
     </div>
 
 </body>
